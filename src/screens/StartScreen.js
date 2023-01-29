@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Background from "../components/Background";
 import Btn from "../components/Btn";
-import { darkGreen } from "../components/Constants";
+import { darkGreen, green } from "../components/Constants";
 import Field from "../components/Field";
 
 const StartScreen = (props) => {
