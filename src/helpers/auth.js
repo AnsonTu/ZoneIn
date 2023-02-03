@@ -1,12 +1,10 @@
 import {
-  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
 
-const auth = getAuth();
-
-const signin = (email, password) => {
+const onUserSignin = (email, password) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -19,7 +17,27 @@ const signin = (email, password) => {
     });
 };
 
-const signup = (email, password) => {
+const onUserSignup = (
+  firstName,
+  lastName,
+  age,
+  email,
+  password,
+  confirmPassword
+) => {
+  if (firstName === "" || lastName === "" || age === "") {
+    console.error("Missing user details");
+    return false;
+  }
+  if (email === "" || password === "") {
+    console.error("Missing email or password");
+    return false;
+  }
+  if (password !== confirmPassword) {
+    console.error("Passwords do not match");
+    return false;
+  }
+
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
@@ -29,8 +47,9 @@ const signup = (email, password) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
+      console.error(errorMessage);
       // ..
     });
 };
 
-export { signin, signup };
+export { onUserSignin, onUserSignup };

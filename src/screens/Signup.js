@@ -1,11 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import Background from "../components/Background";
 import Btn from "../components/Btn";
 import { darkGreen } from "../components/Constants";
 import Field from "../components/Field";
+import { onUserSignup } from "../helpers/auth";
 
 const Signup = (props) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onFirstNameChange = (newFirstName) => {
+    setFirstName(newFirstName);
+  };
+
+  const onLastNameChange = (newLastName) => {
+    setLastName(newLastName);
+  };
+
+  const onAgeChange = (newAge) => {
+    setAge(newAge);
+  };
+
+  const onEmailChange = (newEmail) => {
+    setEmail(newEmail);
+  };
+
+  const onPasswordChange = (newPassword) => {
+    setPassword(newPassword);
+  };
+
+  const onConfirmPasswordChange = (newConfirmPassword) => {
+    setConfirmPassword(newConfirmPassword);
+  };
+
   return (
     <Background>
       <View style={{ alignItems: "center", width: "95%" }}>
@@ -41,13 +74,28 @@ const Signup = (props) => {
           >
             Create a new account
           </Text>
-          <Field placeholder="First Name" />
-          <Field placeholder="Last Name" />
-          <Field placeholder="Age" keyboardType={"number"} />
-          <Field placeholder="Email Address" keyboardType={"email-address"} />
-
-          <Field placeholder="Password" secureTextEntry={true} />
-          <Field placeholder="Confirm Password" secureTextEntry={true} />
+          <Field placeholder="First Name" onChangeText={onFirstNameChange} />
+          <Field placeholder="Last Name" onChangeText={onLastNameChange} />
+          <Field
+            placeholder="Age"
+            keyboardType={"number"}
+            onChangeText={onAgeChange}
+          />
+          <Field
+            placeholder="Email Address"
+            keyboardType={"email-address"}
+            onChangeText={onEmailChange}
+          />
+          <Field
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={onPasswordChange}
+          />
+          <Field
+            placeholder="Confirm Password"
+            secureTextEntry={true}
+            onChangeText={onConfirmPasswordChange}
+          />
           <View
             style={{
               display: "flex",
@@ -82,7 +130,7 @@ const Signup = (props) => {
             >
               Conditions
             </Text>
-            <Text style={{ color: "grey", fontSize: 16 }}>and </Text>
+            <Text style={{ color: "grey", fontSize: 16 }}> and </Text>
             <Text
               style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
             >
@@ -93,7 +141,17 @@ const Signup = (props) => {
             textColor="white"
             bgColor={darkGreen}
             btnLabel="Signup"
-            Press={() => props.navigation.navigate("Dashboard")}
+            // Press={() => props.navigation.navigate("Dashboard")}
+            Press={() =>
+              onUserSignup(
+                firstName,
+                lastName,
+                age,
+                email,
+                password,
+                confirmPassword
+              )
+            }
           />
           <View
             style={{
@@ -103,7 +161,7 @@ const Signup = (props) => {
             }}
           >
             <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-              Already have an account ?{" "}
+              Already have an account?{" "}
             </Text>
             <TouchableOpacity
               onPress={() => props.navigation.navigate("Login")}
