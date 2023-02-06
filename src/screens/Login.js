@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Touchable, TouchableOpacity } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Background from "../components/Background";
 import Btn from "../components/Btn";
 import { darkGreen } from "../components/Constants";
 import Field from "../components/Field";
-const Stack = createNativeStackNavigator();
+import { onUserSignIn } from "../helpers/auth";
+
 const Login = (props) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const onEmailChange = (newEmail) => {
+    setEmail(newEmail);
+  };
+
+  const onPasswordChange = (newPassword) => {
+    setPassword(newPassword);
+  };
+
   return (
     <Background>
       <View style={{ alignItems: "center", width: "95%" }}>
@@ -48,8 +58,13 @@ const Login = (props) => {
           <Field
             placeholder="Email / Username"
             keyboardType={"email-address"}
+            onChangeText={onEmailChange}
           />
-          <Field placeholder="Password" secureTextEntry={true} />
+          <Field
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={onPasswordChange}
+          />
           <View
             style={{
               alignItems: "flex-end",
@@ -69,7 +84,9 @@ const Login = (props) => {
             textColor="white"
             bgColor={darkGreen}
             btnLabel="Login"
-            Press={() => props.navigation.navigate("Dashboard")}
+            Press={() =>
+              onUserSignIn(email, password, props.navigation.navigate)
+            }
           />
           <View
             style={{

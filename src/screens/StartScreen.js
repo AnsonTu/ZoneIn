@@ -3,9 +3,16 @@ import { View, StyleSheet, Text } from "react-native";
 import Background from "../components/Background";
 import Btn from "../components/Btn";
 import { darkGreen, green } from "../components/Constants";
-import Field from "../components/Field";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const StartScreen = (props) => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      props.navigation.navigate("Dashboard");
+    }
+  });
+
   return (
     <Background>
       <View style={{ marginHorizontal: 40, marginVertical: 100 }}>

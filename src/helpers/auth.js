@@ -1,29 +1,31 @@
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
-import { auth } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
+import { auth, db } from "../../firebaseConfig";
 
-const onUserSignin = (email, password) => {
+const onUserSignIn = (email, password, navigate) => {
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
       const user = userCredential.user;
-      // ...
+      navigate("Dashboard");
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
+      console.error("Error:", errorMessage);
     });
 };
 
-const onUserSignup = (
+const onUserSignUp = (
   firstName,
   lastName,
   age,
   email,
   password,
-  confirmPassword
+  confirmPassword,
+  navigate
 ) => {
   if (firstName === "" || lastName === "" || age === "") {
     console.error("Missing user details");
@@ -39,17 +41,34 @@ const onUserSignup = (
   }
 
   createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      // ...
+    .then(async (userCredential) => {
+      try {
+        await addDoc(collection(db, "users"), {
+          userId: userCredential.user.uid,
+          firstName: firstName,
+          lastName: lastName,
+          age: age,
+        });
+      } catch (e) {
+        console.error("Error adding user variables: ", e);
+      }
+      navigate("Dashboard");
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
-      console.error(errorMessage);
-      // ..
+      console.error("Error:", errorMessage);
     });
 };
 
-export { onUserSignin, onUserSignup };
+const onUserSignOut = () => {
+  signOut(auth)
+    .then(() => {
+      console.log("Signed out");
+    })
+    .catch((error) => {
+      const errorMessage = error.message;
+      console.error("Error: ", errorMessage);
+    });
+};
+
+export { onUserSignIn, onUserSignUp, onUserSignOut };

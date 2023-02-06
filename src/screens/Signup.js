@@ -4,7 +4,7 @@ import Background from "../components/Background";
 import Btn from "../components/Btn";
 import { darkGreen } from "../components/Constants";
 import Field from "../components/Field";
-import { onUserSignup } from "../helpers/auth";
+import { onUserSignUp } from "../helpers/auth";
 
 const Signup = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -13,7 +13,6 @@ const Signup = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const onFirstNameChange = (newFirstName) => {
     setFirstName(newFirstName);
@@ -141,15 +140,15 @@ const Signup = (props) => {
             textColor="white"
             bgColor={darkGreen}
             btnLabel="Signup"
-            // Press={() => props.navigation.navigate("Dashboard")}
             Press={() =>
-              onUserSignup(
+              onUserSignUp(
                 firstName,
                 lastName,
                 age,
                 email,
                 password,
-                confirmPassword
+                confirmPassword,
+                props.navigation.navigate
               )
             }
           />
