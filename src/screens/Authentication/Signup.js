@@ -20,6 +20,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { color } from "react-native-elements/dist/helpers";
 import { Checkbox } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
+import { onUserSignUp } from "../../helpers/auth";
 
 const TermsAndConditions = () => {
   return (
@@ -93,6 +94,13 @@ const Signup = (props) => {
   const [screenHeight, setScreenHeight] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge] = useState("");
+  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const roles = ["Parent", "Teacher", "Clinician"];
 
@@ -101,6 +109,38 @@ const Signup = (props) => {
     setScreenWidth(width);
     setScreenHeight(height);
   }, []);
+
+  const onFirstNameChange = (newFirstName) => {
+    setFirstName(newFirstName);
+  };
+
+  const onLastNameChange = (newLastName) => {
+    setLastName(newLastName);
+  };
+
+  const onAgeChange = (newAge) => {
+    setAge(newAge);
+  };
+
+  const onRoleChange = (newRole) => {
+    setRole(newRole);
+  };
+
+  const onEmailChange = (newEmail) => {
+    setEmail(newEmail);
+  };
+
+  const onPasswordChange = (newPassword) => {
+    setPassword(newPassword);
+  };
+
+  const onConfirmPasswordChange = (newConfirmPassword) => {
+    setConfirmPassword(newConfirmPassword);
+  };
+
+  const onIsCheckedChange = (check) => {
+    setIsChecked(check);
+  };
 
   return (
     <View style={{ alignItems: "center" }}>
@@ -125,14 +165,19 @@ const Signup = (props) => {
             Create a new account
           </Text>
 
-          <Field placeholder="First Name" />
-          <Field placeholder="Last Name" />
-          <Field placeholder="Age" keyboardType={"number"} />
+          <Field placeholder="First Name" onChangeText={onFirstNameChange} />
+          <Field placeholder="Last Name" onChangeText={onLastNameChange} />
+          <Field
+            placeholder="Age"
+            keyboardType="numeric"
+            onChangeText={onAgeChange}
+          />
 
           <SelectDropdown
             data={roles}
             onSelect={(selectedItem, index) => {
               console.log(selectedItem, index);
+              onRoleChange(selectedItem);
             }}
             buttonTextAfterSelection={(selectedItem, index) => {
               // text represented after item is selected
@@ -150,10 +195,21 @@ const Signup = (props) => {
             rowTextStyle={styles.dropdown4RowTxtStyle}
           />
 
-          <Field placeholder="Email Address" keyboardType={"email-address"} />
-
-          <Field placeholder="Password" secureTextEntry={true} />
-          <Field placeholder="Confirm Password" secureTextEntry={true} />
+          <Field
+            placeholder="Email Address"
+            keyboardType="email-address"
+            onChangeText={onEmailChange}
+          />
+          <Field
+            placeholder="Password"
+            secureTextEntry={true}
+            onChangeText={onPasswordChange}
+          />
+          <Field
+            placeholder="Confirm Password"
+            secureTextEntry={true}
+            onChangeText={onConfirmPasswordChange}
+          />
 
           <View
             style={{
@@ -169,7 +225,7 @@ const Signup = (props) => {
             <CheckBox
               style={{ width: 5, height: 5, borderRadius: 2 }}
               value={isChecked}
-              onValueChange={() => setIsChecked(!isChecked)}
+              onChange={() => onIsCheckedChange(!isChecked)}
               label=""
             />
             <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -208,7 +264,19 @@ const Signup = (props) => {
             textColor="white"
             bgColor={darkGreen}
             btnLabel="Signup"
-            Press={() => props.navigation.navigate("Dashboard")}
+            Press={() =>
+              onUserSignUp(
+                firstName,
+                lastName,
+                age,
+                role,
+                email,
+                password,
+                confirmPassword,
+                isChecked,
+                props.navigation.navigate
+              )
+            }
           />
           <View
             style={{

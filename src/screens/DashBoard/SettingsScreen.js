@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
+import { onUserSignOut } from "../../helpers/auth";
 
-const SettingsPage = () => {
+const SettingsPage = (props) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
@@ -49,9 +50,7 @@ const SettingsPage = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.setting}
-        onPress={() => {
-          /* Add code here */
-        }}
+        onPress={() => onUserSignOut(props.navigation.navigate)}
       >
         <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>
           Sign Out

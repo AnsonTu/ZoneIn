@@ -6,6 +6,7 @@ import Dashboard from "./src/screens/DashBoard/Dashboard";
 import Login from "./src/screens/Authentication/Login";
 import StartScreen from "./src/screens/Authentication/StartScreen";
 import Signup from "./src/screens/Authentication/Signup";
+import ResetPassword from "./src/screens/Authentication/ResetPassword";
 
 import PatientProfiles from "./src/screens/Profiles/PatientProfiles";
 import ReportsPage from "./src/screens/Reports/ReportsPage";
@@ -34,6 +35,7 @@ function App() {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="MainNavContainer" component={MainNavContainer} />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="PatientProfiles" component={PatientProfiles} />

@@ -6144,7 +6144,7 @@ react-is@^17.0.1:
 
 react-native-checkbox@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/react-native-checkbox/-/react-native-checkbox-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-checkbox/-/react-native-checkbox-2.0.0.tgz#453bbfd2e055a21e69ebe7842414a055d50ff449"
   integrity sha512-XTI7iZ0KuPYyNCvcg4p4eC5ZenuBkfraFUzec17Vao6DsIcn5AOUKkc6KSwLPVksJyWWlPc832M/HTvni5qk7A==
   dependencies:
     prop-types "^15.5.10"
