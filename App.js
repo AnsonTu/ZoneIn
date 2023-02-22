@@ -14,6 +14,8 @@ import DocumentUploadPage from "./src/screens/Reports/UploadReport";
 import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
 
 import AssessmentsPage from "./src/screens/Assesments/AssessmentsPage";
+import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
+import TermsScreen from "./src/screens/Assesments/TermsScreen";
 
 import MainNavContainer from "./src/navigation/MainNavContainer";
 const Stack = createNativeStackNavigator();
@@ -29,7 +31,7 @@ function App() {
         }}
       >
         <Stack.Screen
-          name="i-Care ADHD"
+          name="ZoneIn"
           component={StartScreen}
           screenOptions={{ headerShown: false }}
         />
@@ -49,6 +51,8 @@ function App() {
           name="CompletedAssesments"
           component={CompletedAssesments}
         />
+        <Stack.Screen name="TermsScreen" component={TermsScreen} />
+        <Stack.Screen name="QuizScreen" component={QuizScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

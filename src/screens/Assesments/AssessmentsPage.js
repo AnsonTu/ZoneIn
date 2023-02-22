@@ -12,7 +12,7 @@ import HeaderBlock from "../../components/HeaderBlock";
 import { darkGreen } from "../../components/Constants";
 import Picker from "react-native-picker-select";
 
-const AssessmentsPage = () => {
+const AssessmentsPage = (props) => {
   const [selectedValue, setSelectedValue] = useState(null);
 
   const onValueChange = (value) => {
@@ -63,7 +63,7 @@ const AssessmentsPage = () => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="SNAP-IV 26"
-        Press={() => props.navigation.navigate("AssessmentsPage")}
+        Press={() => props.navigation.navigate("TermsScreen")}
       />
       <HeaderBlock
         textColor="white"

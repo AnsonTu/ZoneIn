@@ -18,7 +18,7 @@ const StartScreen = (props) => {
       <View style={{ marginHorizontal: 40, marginVertical: 100 }}>
         <Text style={{ color: "white", fontSize: 64 }}>i-Care</Text>
         <Text style={{ color: "white", fontSize: 64, marginBottom: 60 }}>
-          ADHD
+          ZoneIn
         </Text>
         <Btn
           bgColor={green}
