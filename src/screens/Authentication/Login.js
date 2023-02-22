@@ -9,28 +9,14 @@ import {
 import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import Field from "../../components/Field";
-import { onUserSignIn } from "../../helpers/auth";
-
 const Login = (props) => {
   const [screenWidth, setScreenWidth] = useState(0);
   const [screenHeight, setScreenHeight] = useState(0);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-
   useEffect(() => {
     const { width, height } = Dimensions.get("screen");
     setScreenWidth(width);
     setScreenHeight(height);
   }, []);
-
-  const onEmailChange = (newEmail) => {
-    setEmail(newEmail);
-  };
-
-  const onPasswordChange = (newPassword) => {
-    setPassword(newPassword);
-  };
-
   return (
     <View style={{ alignItems: "center" }}>
       <ScrollView>
@@ -58,17 +44,13 @@ const Login = (props) => {
           </Text>
           <Field
             placeholder="Email / Username"
-            keyboardType="email-address"
-            onChangeText={onEmailChange}
+            keyboardType={"email-address"}
           />
-          <Field
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={onPasswordChange}
-          />
+          <Field placeholder="Password" secureTextEntry={true} />
           <View
             style={{
               alignItems: "flex-end",
+
               paddingTop: 12,
               paddingRight: 16,
               marginBottom: 200,
@@ -76,7 +58,6 @@ const Login = (props) => {
           >
             <Text
               style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
-              onPress={() => props.navigation.navigate("ResetPassword")}
             >
               Forgot Password ?
             </Text>
@@ -85,9 +66,7 @@ const Login = (props) => {
             textColor="white"
             bgColor={darkGreen}
             btnLabel="Login"
-            Press={() =>
-              onUserSignIn(email, password, props.navigation.navigate)
-            }
+            Press={() => props.navigation.navigate("Dashboard")}
           />
           <View
             style={{

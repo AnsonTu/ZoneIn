@@ -1,12 +1,24 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Image, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 const ProfilesScreen = () => {
   const [username, setUsername] = useState("John Doe");
   const [email, setEmail] = useState("johndoe@example.com");
+  const [PhoneNumber, setPhNo] = useState("6477046890");
+  const [DOB, setDOB] = useState("16-11-2000");
   const [profileImage, setProfileImage] = useState(null);
   const [editMode, setEditMode] = useState(false);
-
+  const [document, setDocument] = useState(null);
   const handleEdit = () => {
     setEditMode(!editMode);
   };
@@ -16,43 +28,86 @@ const ProfilesScreen = () => {
     // save changes to the database or API here
   };
 
+  const handleUploadDocument = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setDocument(result.uri);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.profileImageContainer}>
-        {profileImage ? (
-          <Image style={styles.profileImage} source={{ uri: profileImage }} />
+      <ScrollView>
+        <View style={styles.profileImageContainer}>
+          {profileImage ? (
+            <Image style={styles.profileImage} source={{ uri: profileImage }} />
+          ) : (
+            <Text>John Doe</Text>
+          )}
+        </View>
+        <Text style={styles.label}>Username</Text>
+        {editMode ? (
+          <TextInput
+            style={styles.input}
+            value={username}
+            onChangeText={setUsername}
+            autoCapitalize="none"
+          />
         ) : (
-          <Text>Add Profile Image</Text>
+          <Text style={styles.text}>{username}</Text>
         )}
-      </View>
-      <Text style={styles.label}>Username</Text>
-      {editMode ? (
-        <TextInput
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-      ) : (
-        <Text style={styles.text}>{username}</Text>
-      )}
-      <Text style={styles.label}>Email</Text>
-      {editMode ? (
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-        />
-      ) : (
-        <Text style={styles.text}>{email}</Text>
-      )}
+        <Text style={styles.label}>Email</Text>
+        {editMode ? (
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+          />
+        ) : (
+          <Text style={styles.text}>{email}</Text>
+        )}
+        <Text style={styles.label}>Phone Number (Optional) </Text>
+        {editMode ? (
+          <TextInput
+            style={styles.input}
+            value={PhoneNumber}
+            onChangeText={setPhNo}
+            autoCapitalize="none"
+          />
+        ) : (
+          <Text style={styles.text}>{PhoneNumber}</Text>
+        )}
 
-      {editMode ? (
-        <Button title="Save" onPress={handleSave} />
-      ) : (
-        <Button title="Edit" onPress={handleEdit} />
-      )}
+        <Text style={styles.label}>Date of Birth </Text>
+        {editMode ? (
+          <TextInput
+            style={styles.input}
+            value={DOB}
+            onChangeText={setDOB}
+            autoCapitalize="none"
+          />
+        ) : (
+          <Text style={styles.text}>{DOB}</Text>
+        )}
+
+        <Text style={styles.label}>Upload Document </Text>
+        <TouchableOpacity style={styles.button} onPress={handleUploadDocument}>
+          <Text>Click here to upload</Text>
+        </TouchableOpacity>
+        {document && <Image source={{ uri: document }} style={styles.image} />}
+
+        {editMode ? (
+          <Button title="Save" onPress={handleSave} />
+        ) : (
+          <Button title="Edit" onPress={handleEdit} />
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -82,6 +137,26 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 10,
+    height: 40,
+    width: "70%",
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  },
+  button: {
+    height: 40,
+    width: "50%",
+    backgroundColor: "gray",
+    color: "white",
+    paddingLeft: 20,
+    padding: 10,
+    textAlign: "center",
+    marginBottom: 12,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginVertical: 20,
   },
 });
 
