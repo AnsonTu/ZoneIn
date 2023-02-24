@@ -12,6 +12,7 @@ import {
 import { auth } from "../../../firebaseConfig";
 import { getUserInfo, updateUserInfo } from "../../helpers/query";
 import * as ImagePicker from "expo-image-picker";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const ProfilesScreen = () => {
   const [documentId, setDocumentId] = useState("");
@@ -19,10 +20,11 @@ const ProfilesScreen = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState(auth.currentUser.email);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [DOB, setDOB] = useState("16-11-2000");
+  const [DOB, setDOB] = useState(new Date());
   const [profileImage, setProfileImage] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [document, setDocument] = useState(null);
+  const [isDateModalVisible, setIsDateModalVisible] = useState(false);
 
   useEffect(() => {
     const getCurrentUserInfo = async () => {
@@ -32,6 +34,7 @@ const ProfilesScreen = () => {
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
       setPhoneNumber(userInfo.phoneNumber);
+      setDOB(new Date(userInfo.dateOfBirth.seconds * 1000));
     };
     getCurrentUserInfo();
   }, []);
@@ -56,15 +59,15 @@ const ProfilesScreen = () => {
     setPhoneNumber(newPhoneNumber);
   };
 
-  const onDOBChange = (newDOB) => {
-    setDOB(newDOB);
+  const onDateChange = (event, newDate) => {
+    setIsDateModalVisible(false);
+    setDOB(newDate);
   };
 
   const handleSave = async () => {
     setEditMode(false);
     await updateUserInfo(
       documentId,
-      auth.currentUser.uid,
       firstName,
       lastName,
       email,
@@ -123,6 +126,7 @@ const ProfilesScreen = () => {
             style={styles.input}
             value={email}
             onChangeText={onEmailChange}
+            keyboardType="email-address"
             autoCapitalize="none"
           />
         ) : (
@@ -142,14 +146,27 @@ const ProfilesScreen = () => {
 
         <Text style={styles.label}>Date of Birth </Text>
         {editMode ? (
-          <TextInput
-            style={styles.input}
-            value={DOB}
-            onChangeText={onDOBChange}
-            autoCapitalize="none"
-          />
+          <>
+            <TouchableOpacity onPress={() => setIsDateModalVisible(true)}>
+              <Text
+                style={{
+                  backgroundColor: "rgb(220, 220, 220)",
+                  fontSize: 16,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  marginBottom: 12,
+                  borderRadius: 25,
+                }}
+              >
+                {DOB.toISOString().split("T")[0]}
+              </Text>
+            </TouchableOpacity>
+            {isDateModalVisible && (
+              <RNDateTimePicker value={DOB} onChange={onDateChange} />
+            )}
+          </>
         ) : (
-          <Text style={styles.text}>{DOB}</Text>
+          <Text style={styles.text}>{DOB.toISOString().split("T")[0]}</Text>
         )}
 
         <Text style={styles.label}>Upload Document </Text>
