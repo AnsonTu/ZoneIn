@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,23 +9,43 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { auth } from "../../../firebaseConfig";
+import { getUserInfo, updateUserInfo } from "../../helpers/query";
 import * as ImagePicker from "expo-image-picker";
 
 const ProfilesScreen = () => {
-  const [username, setUsername] = useState("John Doe");
-  const [email, setEmail] = useState("johndoe@example.com");
-  const [phoneNumber, setPhoneNumber] = useState("6477046890");
+  const [documentId, setDocumentId] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState(auth.currentUser.email);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [DOB, setDOB] = useState("16-11-2000");
   const [profileImage, setProfileImage] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [document, setDocument] = useState(null);
 
+  useEffect(() => {
+    const getCurrentUserInfo = async () => {
+      const userInfo = await getUserInfo(auth.currentUser.uid);
+      console.log(userInfo);
+      setDocumentId(userInfo.docId);
+      setFirstName(userInfo.firstName);
+      setLastName(userInfo.lastName);
+      setPhoneNumber(userInfo.phoneNumber);
+    };
+    getCurrentUserInfo();
+  }, []);
+
   const handleEdit = () => {
     setEditMode(!editMode);
   };
 
-  const onUsernameChange = (newUsername) => {
-    setUsername(newUsername);
+  const onFirstNameChange = (newFirstName) => {
+    setFirstName(newFirstName);
+  };
+
+  const onLastNameChange = (newLastName) => {
+    setLastName(newLastName);
   };
 
   const onEmailChange = (newEmail) => {
@@ -40,9 +60,17 @@ const ProfilesScreen = () => {
     setDOB(newDOB);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setEditMode(false);
-    // save changes to the database or API here
+    await updateUserInfo(
+      documentId,
+      auth.currentUser.uid,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      DOB
+    );
   };
 
   const handleUploadDocument = async () => {
@@ -64,19 +92,30 @@ const ProfilesScreen = () => {
           {profileImage ? (
             <Image style={styles.profileImage} source={{ uri: profileImage }} />
           ) : (
-            <Text>John Doe</Text>
+            <Text>{`${firstName} ${lastName}`}</Text>
           )}
         </View>
-        <Text style={styles.label}>Username</Text>
+        <Text style={styles.label}>First Name</Text>
         {editMode ? (
           <TextInput
             style={styles.input}
-            value={username}
-            onChangeText={onUsernameChange}
+            value={firstName}
+            onChangeText={onFirstNameChange}
             autoCapitalize="none"
           />
         ) : (
-          <Text style={styles.text}>{username}</Text>
+          <Text style={styles.text}>{firstName}</Text>
+        )}
+        <Text style={styles.label}>Last Name</Text>
+        {editMode ? (
+          <TextInput
+            style={styles.input}
+            value={lastName}
+            onChangeText={onLastNameChange}
+            autoCapitalize="none"
+          />
+        ) : (
+          <Text style={styles.text}>{lastName}</Text>
         )}
         <Text style={styles.label}>Email</Text>
         {editMode ? (
