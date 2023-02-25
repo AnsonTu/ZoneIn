@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
+import { auth } from "../../../firebaseConfig";
 import { onUserSignOut } from "../../helpers/auth";
+import { getUserInfo } from "../../helpers/query";
 
 const SettingsPage = (props) => {
+  const [username, setUsername] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = useState(false);
 
-  const username = "John Doe";
+  useEffect(() => {
+    const getCurrentUserInfo = async () => {
+      const userInfo = await getUserInfo(auth.currentUser.uid);
+      setUsername(`${userInfo.firstName} ${userInfo.lastName}`);
+    };
+    getCurrentUserInfo();
+  }, []);
 
   return (
     <View style={[styles.container, darkModeEnabled && styles.darkContainer]}>

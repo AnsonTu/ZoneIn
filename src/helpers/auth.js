@@ -27,7 +27,8 @@ const onUserSignIn = (email, password, navigate) => {
 const onUserSignUp = (
   firstName,
   lastName,
-  age,
+  phoneNumber,
+  dateOfBirth,
   role,
   email,
   password,
@@ -39,7 +40,13 @@ const onUserSignUp = (
     console.error("Terms and Conditions must be accepted");
     return false;
   }
-  if (firstName === "" || lastName === "" || age === "" || role === "") {
+  if (
+    firstName === "" ||
+    lastName === "" ||
+    phoneNumber === "" ||
+    dateOfBirth === "" ||
+    role === ""
+  ) {
     console.error("Missing user details");
     return false;
   }
@@ -59,7 +66,8 @@ const onUserSignUp = (
           userId: userCredential.user.uid,
           firstName: firstName,
           lastName: lastName,
-          age: age,
+          phoneNumber: phoneNumber,
+          dateOfBirth: dateOfBirth,
           role: role,
         });
       } catch (e) {
@@ -90,7 +98,6 @@ const onUserResetPassword = (email) => {
     .then(() => {
       console.log("RESET PASS SENT");
       // Password reset email sent!
-      // ..
     })
     .catch((error) => {
       const errorMessage = error.message;

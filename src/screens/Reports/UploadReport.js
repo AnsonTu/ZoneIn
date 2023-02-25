@@ -12,24 +12,38 @@ import * as ImagePicker from "expo-image-picker";
 
 const DocumentUploadPage = () => {
   const [image, setImage] = useState(null);
-
+  const [pickedImagePath, setPickedImagePath] = useState("");
   const handleCamera = async () => {
-    const cameraPermission = await ImagePicker.requestCameraPermissionAsync();
-    if (cameraPermission) {
-      const result = await ImagePicker.launchCameraAsync();
-      if (!result.cancelled) {
-        setImage(result.uri);
-      }
+    // Ask the user for the permission to access the camera
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("You've refused to allow this appp to access your camera!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    // Explore the result
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
   };
-
   const handleFile = async () => {
-    const filePermission = await ImagePicker.requestCameraRollPermissionAsync();
-    if (filePermission) {
-      const result = await ImagePicker.launchImageLibraryAsync();
-      if (!result.cancelled) {
-        setImage(result.uri);
-      }
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
     }
   };
 
@@ -43,7 +57,12 @@ const DocumentUploadPage = () => {
       </View>
       {image && (
         <View style={styles.selectedImageContainer}>
-          <Image source={{ uri: image }} style={styles.selectedImage} />
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
         </View>
       )}
       <View style={styles.buttonsContainer}>

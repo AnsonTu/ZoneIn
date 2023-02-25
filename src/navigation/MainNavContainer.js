@@ -10,8 +10,6 @@ import SettingsScreen from "../screens/DashBoard/SettingsScreen";
 import NotifyScreen from "../screens/DashBoard/NotifyScreen";
 //Screen names
 const homeName = "Home";
-const profileName = "Profile";
-const settingsName = "Settings";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +17,7 @@ function MainNavContainer() {
   return (
     <Tab.Navigator
       initialRouteName={homeName}
-      activeColor="#006D77"
-      inactiveColor="#3e2465"
+      activeColor="#83C5BE"
       barStyle={{ backgroundColor: "#694fad" }}
     >
       <Tab.Screen
@@ -29,6 +26,7 @@ function MainNavContainer() {
         options={{
           headerShown: false,
           tabBarLabel: "Home",
+          tabBarActiveTintColor: "#006D77",
           tabBarIcon: ({ color }) => (
             <Ionicons name="ios-home" color={green} size={26} />
           ),
@@ -42,6 +40,7 @@ function MainNavContainer() {
           headerShown: false,
 
           tabBarLabel: "Notifications",
+          tabBarActiveTintColor: "#006D77",
           tabBarIcon: ({ color }) => (
             <Ionicons name="ios-notifications-sharp" color={green} size={26} />
           ),
@@ -54,6 +53,7 @@ function MainNavContainer() {
           headerShown: false,
 
           tabBarLabel: "Settings",
+          tabBarActiveTintColor: "#006D77",
           tabBarIcon: ({ color }) => (
             <Ionicons name="ios-settings" color={green} size={26} />
           ),
@@ -66,6 +66,7 @@ function MainNavContainer() {
           headerShown: false,
 
           tabBarLabel: "Profile",
+          tabBarActiveTintColor: "#006D77",
           tabBarIcon: ({ color }) => (
             <Ionicons name="ios-person" color={green} size={26} />
           ),

@@ -20,6 +20,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { color } from "react-native-elements/dist/helpers";
 import { Checkbox } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { onUserSignUp } from "../../helpers/auth";
 
 const TermsAndConditions = () => {
@@ -94,9 +95,11 @@ const Signup = (props) => {
   const [screenHeight, setScreenHeight] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isDateModalVisible, setIsDateModalVisible] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [role, setRole] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,8 +121,13 @@ const Signup = (props) => {
     setLastName(newLastName);
   };
 
-  const onAgeChange = (newAge) => {
-    setAge(newAge);
+  const onDateChange = (event, newDate) => {
+    setIsDateModalVisible(false);
+    setDateOfBirth(newDate);
+  };
+
+  const onPhoneNumberChange = (newPhoneNumber) => {
+    setPhoneNumber(newPhoneNumber);
   };
 
   const onRoleChange = (newRole) => {
@@ -168,10 +176,31 @@ const Signup = (props) => {
           <Field placeholder="First Name" onChangeText={onFirstNameChange} />
           <Field placeholder="Last Name" onChangeText={onLastNameChange} />
           <Field
-            placeholder="Age"
+            placeholder="Phone Number"
             keyboardType="numeric"
-            onChangeText={onAgeChange}
+            onChangeText={onPhoneNumberChange}
           />
+
+          <Text style={{ color: darkGreen, fontSize: 16 }}>
+            Set Date of Birth
+          </Text>
+          <TouchableOpacity onPress={() => setIsDateModalVisible(true)}>
+            <Text
+              style={{
+                backgroundColor: "rgb(220, 220, 220)",
+                fontSize: 16,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginBottom: 12,
+                borderRadius: 25,
+              }}
+            >
+              {dateOfBirth.toISOString().split("T")[0]}
+            </Text>
+          </TouchableOpacity>
+          {isDateModalVisible && (
+            <RNDateTimePicker value={dateOfBirth} onChange={onDateChange} />
+          )}
 
           <SelectDropdown
             data={roles}
@@ -268,7 +297,8 @@ const Signup = (props) => {
               onUserSignUp(
                 firstName,
                 lastName,
-                age,
+                phoneNumber,
+                dateOfBirth,
                 role,
                 email,
                 password,
