@@ -11,7 +11,8 @@ import StartScreen from "./src/screens/Authentication/StartScreen";
 import Signup from "./src/screens/Authentication/Signup";
 import ResetPassword from "./src/screens/Authentication/ResetPassword";
 
-import PatientProfiles from "./src/screens/Profiles/PatientProfiles";
+import Patient_Info_Profile from "./src/screens/Profiles/Patient-Info-Profile";
+import PatientProfilesList from "./src/screens/Profiles/PatientProfilesList";
 import ReportsPage from "./src/screens/Reports/ReportsPage";
 import DocumentUploadPage from "./src/screens/Reports/UploadReport";
 import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
@@ -57,7 +58,14 @@ function App() {
               component={MainNavContainer}
             />
             <Stack.Screen name="Dashboard" component={Dashboard} />
-            <Stack.Screen name="PatientProfiles" component={PatientProfiles} />
+            <Stack.Screen
+              name="PatientProfilesList"
+              component={PatientProfilesList}
+            />
+            <Stack.Screen
+              name="Patient_Info_Profile"
+              component={Patient_Info_Profile}
+            />
             <Stack.Screen name="ReportsPage" component={ReportsPage} />
             <Stack.Screen
               name="DocumentUploadPage"
