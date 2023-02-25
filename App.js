@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -23,12 +23,20 @@ import TermsScreen from "./src/screens/Assesments/TermsScreen";
 import MainNavContainer from "./src/navigation/MainNavContainer";
 
 const Stack = createNativeStackNavigator();
+import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
+import TermsScreen from "./src/screens/Assesments/TermsScreen";
+import CreateReport from "./src/screens/Reports/createReport";
+
+const loadFonts = async () => {
+  await Font.loadAsync({
+    "Material Design Icons": require("./node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"),
+  });
+};
 
 function App() {
-  const [isAuth, setIsAuth] = useState(false);
-  onAuthStateChanged(auth, async (user) => {
-    user ? setIsAuth(true) : setIsAuth(false);
-  });
+  useEffect(() => {
+    loadFonts();
+  }, []);
 
   return (
     <NavigationContainer>
@@ -70,6 +78,7 @@ function App() {
             />
             <Stack.Screen name="TermsScreen" component={TermsScreen} />
             <Stack.Screen name="QuizScreen" component={QuizScreen} />
+            <Stack.Screen name="CreateReport" component={CreateReport} />
           </>
         )}
       </Stack.Navigator>
