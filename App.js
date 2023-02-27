@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -17,8 +17,6 @@ import DocumentUploadPage from "./src/screens/Reports/UploadReport";
 import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
 
 import AssessmentsPage from "./src/screens/Assesments/AssessmentsPage";
-import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
-import TermsScreen from "./src/screens/Assesments/TermsScreen";
 
 import MainNavContainer from "./src/navigation/MainNavContainer";
 
@@ -34,6 +32,11 @@ const loadFonts = async () => {
 };
 
 function App() {
+  const [isAuth, setIsAuth] = useState(false);
+  onAuthStateChanged(auth, async (user) => {
+    user ? setIsAuth(true) : setIsAuth(false);
+  });
+
   useEffect(() => {
     loadFonts();
   }, []);
