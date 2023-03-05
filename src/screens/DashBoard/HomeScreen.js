@@ -21,7 +21,7 @@ const HomeScreen = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="Patient Profiles"
-        Press={() => props.navigation.navigate("PatientProfiles")}
+        Press={() => props.navigation.navigate("PatientProfilesList")}
       />
       <HeaderBlock
         textColor="white"

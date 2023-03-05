@@ -169,12 +169,6 @@ const ProfilesScreen = () => {
           <Text style={styles.text}>{DOB.toISOString().split("T")[0]}</Text>
         )}
 
-        <Text style={styles.label}>Upload Document </Text>
-        <TouchableOpacity style={styles.button} onPress={handleUploadDocument}>
-          <Text>Click here to upload</Text>
-        </TouchableOpacity>
-        {document && <Image source={{ uri: document }} style={styles.image} />}
-
         {editMode ? (
           <Button title="Save" onPress={handleSave} />
         ) : (
