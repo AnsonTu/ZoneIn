@@ -71,7 +71,8 @@ const PatientProfileList = (props) => {
   const addNewPatient = async () => {
     const newPatient = {
       id: `${patientFirstName}${patientLastName}${patients.length + 1}`,
-      name: `${patientFirstName} ${patientLastName}`,
+      firstName: `${patientFirstName}`,
+      lastName: `${patientLastName}`,
       sex: patientSex,
       dob: patientDOB,
     };
