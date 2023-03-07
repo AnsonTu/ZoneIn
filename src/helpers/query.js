@@ -103,6 +103,16 @@ const deleteChildProfile = async (childProfileDocId) => {
     .catch((e) => console.error("Error deleting profile: ", e));
 };
 
+const addPatientAssessment = async (
+  patient,
+  assessmentType,
+  ...assessmentAnswers
+) => {
+  console.log(patient);
+  console.log(assessmentType);
+  console.log(assessmentAnswers);
+};
+
 export {
   getUserInfo,
   updateUserInfo,
@@ -110,4 +120,5 @@ export {
   addChildProfile,
   updateChildProfile,
   deleteChildProfile,
+  addPatientAssessment,
 };
