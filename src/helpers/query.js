@@ -5,6 +5,8 @@ import {
   getDocs,
   doc,
   updateDoc,
+  addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { updateEmail } from "firebase/auth";
 import { auth, db } from "../../firebaseConfig";
@@ -48,4 +50,64 @@ const updateUserInfo = async (
     });
 };
 
-export { getUserInfo, updateUserInfo };
+const getChildProfiles = async (userId) => {
+  let childProfiles = [];
+  const childProfilesQuery = query(
+    collection(db, "child-profiles"),
+    where("parentProfileId", "==", userId)
+  );
+  const querySnapshot = await getDocs(childProfilesQuery);
+  querySnapshot.forEach((doc) => {
+    childProfiles = [...childProfiles, { ...doc.data(), docId: doc.id }];
+  });
+
+  return childProfiles;
+};
+
+const addChildProfile = async (
+  documentId,
+  firstName,
+  lastName,
+  sex,
+  dateOfBirth
+) => {
+  console.log(documentId, firstName, lastName, sex, dateOfBirth);
+  try {
+    await addDoc(collection(db, "child-profiles"), {
+      parentProfileId: documentId,
+      firstName,
+      lastName,
+      sex,
+      dateOfBirth,
+    });
+  } catch (e) {
+    console.error("Error creating child profile: ", e);
+  }
+};
+
+const updateChildProfile = async (childProfile) => {
+  console.log(childProfile);
+  const { docId, firstName, lastName, sex, dob } = childProfile;
+  const childProfileRef = doc(db, "child-profiles", docId);
+  await updateDoc(childProfileRef, {
+    firstName,
+    lastName,
+    sex,
+    dateOfBirth: dob,
+  });
+};
+
+const deleteChildProfile = async (childProfileDocId) => {
+  await deleteDoc(doc(db, "child-profiles", childProfileDocId))
+    .then(() => console.log("Deleted profile"))
+    .catch((e) => console.error("Error deleting profile: ", e));
+};
+
+export {
+  getUserInfo,
+  updateUserInfo,
+  getChildProfiles,
+  addChildProfile,
+  updateChildProfile,
+  deleteChildProfile,
+};

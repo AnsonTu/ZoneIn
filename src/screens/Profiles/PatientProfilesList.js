@@ -1,50 +1,105 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Modal,
-  TextInput,
-  ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import Field from "../../components/Field";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import SelectDropdown from "react-native-select-dropdown";
+import { auth } from "../../../firebaseConfig";
+import {
+  getUserInfo,
+  addChildProfile,
+  getChildProfiles,
+  deleteChildProfile,
+} from "../../helpers/query";
 
 const PatientProfileList = (props) => {
-  const [patients, setPatients] = useState([{ id: 1, name: "John Doe" }]);
+  const isFocused = useIsFocused();
+  const [patients, setPatients] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newPatientFirstName, setNewPatientFirstName] = useState("");
-  const [newPatientLastName, setNewPatientLastName] = useState("");
-  const [newPatientAge, setNewPatientAge] = useState("");
-  const [newPatientDOB, setNewPatientDOB] = useState("");
-  const [newPatientSex, setNewPatientSex] = useState("");
+  const [isDateModalVisible, setIsDateModalVisible] = useState(false);
+  const [userId, setUserId] = useState("");
+  const [patientFirstName, setPatientFirstName] = useState("");
+  const [patientLastName, setPatientLastName] = useState("");
+  const [patientDOB, setPatientDOB] = useState(new Date());
+  const [patientSex, setPatientSex] = useState("Male");
   const [selectedPatientId, setSelectedPatientId] = useState(null);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const deleteTimeoutRef = useRef(null);
 
-  const addNewPatient = () => {
-    const newPatient = {
-      id: patients.length + 1,
-      name: `${newPatientFirstName} ${newPatientLastName}`,
-      age: newPatientAge,
-      dob: newPatientDOB,
-      sex: newPatientSex,
+  const genders = ["Male", "Female"];
+
+  useEffect(() => {
+    const getCurrentAccountInfo = async () => {
+      let formattedProfiles = [];
+      const userInfo = await getUserInfo(auth.currentUser.uid);
+      setUserId(userInfo.userId);
+      const childProfiles = await getChildProfiles(userInfo.userId);
+      for (let i = 0; i < childProfiles.length; i++) {
+        formattedProfiles[i] = {
+          docId: childProfiles[i].docId,
+          id: childProfiles[i].firstName + childProfiles[i].lastName + i,
+          firstName: childProfiles[i].firstName,
+          lastName: childProfiles[i].lastName,
+          sex: childProfiles[i].sex,
+          dob: childProfiles[i].dateOfBirth,
+        };
+      }
+      setPatients(formattedProfiles);
     };
-    setPatients([...patients, newPatient]);
-    setNewPatientFirstName("");
-    setNewPatientLastName("");
-    setNewPatientAge("");
-    setNewPatientDOB("");
-    setNewPatientSex("");
-    setIsModalVisible(false);
+    if (isFocused) {
+      getCurrentAccountInfo();
+    }
+  }, [isFocused]);
+
+  const onModalOpen = () => {
+    setPatientFirstName("");
+    setPatientLastName("");
+    setPatientSex("Male");
+    setPatientDOB(new Date());
+    setIsModalVisible(true);
   };
 
-  const deletePatient = () => {
+  const addNewPatient = async () => {
+    const newPatient = {
+      id: `${patientFirstName}${patientLastName}${patients.length + 1}`,
+      firstName: `${patientFirstName}`,
+      lastName: `${patientLastName}`,
+      sex: patientSex,
+      dob: patientDOB,
+    };
+    if (patientFirstName === "" || patientLastName === "") {
+      console.error("Missing fields");
+    } else if (patientDOB > new Date()) {
+      console.error("Invalid date of birth");
+    } else {
+      await addChildProfile(
+        userId,
+        patientFirstName,
+        patientLastName,
+        patientSex,
+        patientDOB
+      );
+      setPatients([...patients, newPatient]);
+      setIsModalVisible(false);
+    }
+  };
+
+  const onDateChange = (event, newDate) => {
+    setIsDateModalVisible(false);
+    setPatientDOB(newDate);
+  };
+
+  const deletePatient = (patientToDelete) => {
+    deleteChildProfile(patientToDelete.docId);
     const updatedPatients = patients.filter((p) => p.id !== selectedPatientId);
     setPatients(updatedPatients);
     setSelectedPatientId(null);
@@ -74,6 +129,7 @@ const PatientProfileList = (props) => {
     // Do something when navigating to another file
     console.log("Navigating to another file...");
   };
+
   return (
     <TouchableWithoutFeedback onPress={handlePressOutsidePatientTiles}>
       <View style={styles.container}>
@@ -81,25 +137,28 @@ const PatientProfileList = (props) => {
           <TouchableOpacity
             key={patient.id}
             style={styles.patientTile}
-            onPress={() => props.navigation.navigate("Patient_Info_Profile")}
+            onPress={() =>
+              props.navigation.navigate("Patient_Info_Profile", {
+                patient,
+              })
+            }
             onLongPress={() => handlePatientTilePress(patient)}
           >
             <Ionicons name="ios-person" size={40} color="#fff" />
-            <Text style={styles.buttonText}>{patient.name}</Text>
+            <Text
+              style={styles.buttonText}
+            >{`${patient.firstName} ${patient.lastName}`}</Text>
             {selectedPatientId === patient.id && showDeleteButton && (
               <TouchableOpacity
                 style={styles.deleteButton}
-                onPress={deletePatient}
+                onPress={() => deletePatient(patient)}
               >
                 <Ionicons name="ios-trash" size={25} color="#fff" />
               </TouchableOpacity>
             )}
           </TouchableOpacity>
         ))}
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setIsModalVisible(true)}
-        >
+        <TouchableOpacity style={styles.addButton} onPress={onModalOpen}>
           <Text style={styles.addButtonText}>Add Child</Text>
         </TouchableOpacity>
         <Modal visible={isModalVisible} animationType="slide">
@@ -108,32 +167,70 @@ const PatientProfileList = (props) => {
             <Field
               style={styles.inputField}
               placeholder="First Name"
-              value={newPatientFirstName}
-              onChangeText={setNewPatientFirstName}
+              value={patientFirstName}
+              onChangeText={setPatientFirstName}
             />
             <Field
               style={styles.inputField}
               placeholder="Last Name"
-              value={newPatientLastName}
-              onChangeText={setNewPatientLastName}
+              value={patientLastName}
+              onChangeText={setPatientLastName}
             />
-            <Field
-              style={styles.inputField}
-              placeholder="Age"
-              value={newPatientAge}
-              onChangeText={setNewPatientAge}
-            />
-            <Field
-              style={styles.inputField}
-              placeholder="Date of Birth"
-              value={newPatientDOB}
-              onChangeText={setNewPatientDOB}
-            />
-            <Field
-              style={styles.inputField}
-              placeholder="Sex"
-              value={newPatientSex}
-              onChangeText={setNewPatientSex}
+            <Text
+              style={{
+                color: darkGreen,
+                fontSize: 15,
+              }}
+            >
+              Date of Birth
+            </Text>
+            <TouchableOpacity
+              style={{
+                width: "78%",
+              }}
+              onPress={() => setIsDateModalVisible(true)}
+            >
+              <Text
+                style={{
+                  backgroundColor: "rgb(220, 220, 220)",
+                  fontSize: 15,
+                  paddingVertical: 10,
+                  paddingHorizontal: 20,
+                  marginBottom: 12,
+                  borderRadius: 25,
+                }}
+              >
+                {patientDOB.toISOString().split("T")[0]}
+              </Text>
+            </TouchableOpacity>
+            {isDateModalVisible && (
+              <RNDateTimePicker value={patientDOB} onChange={onDateChange} />
+            )}
+            <Text
+              style={{
+                color: darkGreen,
+                fontSize: 16,
+              }}
+            >
+              Gender
+            </Text>
+            <SelectDropdown
+              data={genders}
+              defaultValue={patientSex}
+              buttonStyle={{ borderWidth: 2 }}
+              onSelect={(selectedItem) => {
+                setPatientSex(selectedItem);
+              }}
+              buttonTextAfterSelection={(selectedItem) => {
+                return selectedItem;
+              }}
+              rowTextForSelection={(item) => {
+                return item;
+              }}
+              dropdownIconPosition={"right"}
+              dropdownStyle={styles.dropdown4DropdownStyle}
+              rowStyle={styles.dropdown4RowStyle}
+              rowTextStyle={styles.dropdown4RowTxtStyle}
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity

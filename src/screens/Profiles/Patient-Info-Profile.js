@@ -4,82 +4,141 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Modal,
   TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { green } from "../components/Constants";
+import SelectDropdown from "react-native-select-dropdown";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { updateChildProfile } from "../../helpers/query";
 
-const Patient_Info_Profile = () => {
-  const [patients, setPatients] = useState([
-    { id: 1, name: "John Doe", age: 30 },
-  ]);
-
-  const [selectedPatient, setSelectedPatient] = useState(null);
+const Patient_Info_Profile = (props) => {
+  const { params } = props.route;
+  const patientInfo = params.patient;
+  const [patient, setPatient] = useState({
+    docId: patientInfo.docId,
+    id: patientInfo.id,
+    firstName: patientInfo.firstName,
+    lastName: patientInfo.lastName,
+    sex: patientInfo.sex,
+    dob: patientInfo.dob.seconds * 1000,
+  });
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editedPatientName, setEditedPatientName] = useState("");
-  const [editedPatientAge, setEditedPatientAge] = useState("");
+  const [isDateModalVisible, setIsDateModalVisible] = useState(false);
+  const [editedPatientFirstName, setEditedPatientFirstName] = useState(
+    patientInfo.firstName
+  );
+  const [editedPatientLastName, setEditedPatientLastName] = useState(
+    patientInfo.lastName
+  );
+  const [editedPatientSex, setEditedPatientSex] = useState(patientInfo.sex);
+  const [editedPatientDOB, setEditedPatientDOB] = useState(new Date());
+
+  const genders = ["Male", "Female"];
+
+  const onDateChange = (event, newDate) => {
+    setIsDateModalVisible(false);
+    setEditedPatientDOB(newDate);
+  };
 
   const handleEdit = (patient) => {
-    setSelectedPatient(patient);
-    setEditedPatientName(patient.name);
-    setEditedPatientAge(patient.age.toString());
+    setEditedPatientFirstName(patient.firstName);
+    setEditedPatientLastName(patient.lastName);
+    setEditedPatientDOB(new Date(patient.dob));
     setEditModalVisible(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const editedPatient = {
-      ...selectedPatient,
-      name: editedPatientName,
-      age: parseInt(editedPatientAge),
+      ...patient,
+      firstName: editedPatientFirstName,
+      lastName: editedPatientLastName,
+      sex: editedPatientSex,
+      dob: editedPatientDOB,
     };
-    const updatedPatients = patients.map((patient) =>
-      patient.id === editedPatient.id ? editedPatient : patient
-    );
-    setPatients(updatedPatients);
+    setPatient(editedPatient);
+    await updateChildProfile(editedPatient);
     setEditModalVisible(false);
   };
 
   const handleCancel = () => {
-    setEditedPatientName("");
-    setEditedPatientAge("");
-    setSelectedPatient(null);
     setEditModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      {patients.map((patient) => (
-        <TouchableOpacity
-          key={patient.id}
-          style={styles.patientTile}
-          onPress={() => handleEdit(patient)}
-        >
-          <Ionicons name="ios-person" size={40} color="#fff" />
-          <Text style={styles.buttonText}>{patient.name}</Text>
-          <View style={styles.buttonContainer1}>
-            <TouchableOpacity onPress={() => handleEdit(patient)}>
-              <Ionicons name="ios-create" size={24} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      ))}
+      <TouchableOpacity
+        key={patient.id}
+        style={styles.patientTile}
+        onPress={() => handleEdit(patient)}
+      >
+        <Ionicons name="ios-person" size={40} color="#fff" />
+        <Text
+          style={styles.buttonText}
+        >{`${patient.firstName} ${patient.lastName}`}</Text>
+        <View style={styles.buttonContainer1}>
+          <TouchableOpacity onPress={() => handleEdit(patient)}>
+            <Ionicons name="ios-create" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
       <Modal visible={editModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>Edit Patient</Text>
           <TextInput
             style={styles.input}
-            placeholder="Name"
-            value={editedPatientName}
-            onChangeText={setEditedPatientName}
+            placeholder="First Name"
+            value={editedPatientFirstName}
+            onChangeText={setEditedPatientFirstName}
           />
           <TextInput
             style={styles.input}
-            placeholder="Age"
-            keyboardType="numeric"
-            value={editedPatientAge}
-            onChangeText={setEditedPatientAge}
+            placeholder="Last Name"
+            value={editedPatientLastName}
+            onChangeText={setEditedPatientLastName}
+          />
+          <TouchableOpacity
+            style={{
+              width: "78%",
+            }}
+            onPress={() => setIsDateModalVisible(true)}
+          >
+            <Text
+              style={{
+                backgroundColor: "rgb(220, 220, 220)",
+                fontSize: 15,
+                paddingVertical: 10,
+                paddingHorizontal: 20,
+                marginBottom: 12,
+                borderRadius: 25,
+              }}
+            >
+              {editedPatientDOB.toISOString().split("T")[0]}
+            </Text>
+          </TouchableOpacity>
+          {isDateModalVisible && (
+            <RNDateTimePicker
+              value={editedPatientDOB}
+              onChange={onDateChange}
+            />
+          )}
+          <SelectDropdown
+            data={genders}
+            defaultValue={editedPatientSex}
+            buttonStyle={{ borderWidth: 2 }}
+            onSelect={(selectedItem) => {
+              setEditedPatientSex(selectedItem);
+            }}
+            buttonTextAfterSelection={(selectedItem) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item) => {
+              return item;
+            }}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown4DropdownStyle}
+            rowStyle={styles.dropdown4RowStyle}
+            rowTextStyle={styles.dropdown4RowTxtStyle}
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -137,6 +196,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    marginTop: "2%",
   },
   modalTitle: {
     fontSize: 24,
@@ -154,6 +214,7 @@ const styles = StyleSheet.create({
   EditPageButton: {
     backgroundColor: "green",
     padding: 10,
+    margin: 5,
     borderRadius: 5,
     justifyContent: "space-between",
   },

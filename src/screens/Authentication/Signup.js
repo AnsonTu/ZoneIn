@@ -5,20 +5,14 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
-  Animated,
   Modal,
   StyleSheet,
 } from "react-native";
-import Background from "../../components/Background";
 import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import Field from "../../components/Field";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "react-native-checkbox";
-import Picker from "react-native-picker-select";
-import DropDownPicker from "react-native-dropdown-picker";
-import { color } from "react-native-elements/dist/helpers";
-import { Checkbox } from "react-native-paper";
 import SelectDropdown from "react-native-select-dropdown";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { onUserSignUp } from "../../helpers/auth";
