@@ -21,11 +21,12 @@ import AssessmentsPage from "./src/screens/Assesments/AssessmentsPage";
 
 import MainNavContainer from "./src/navigation/MainNavContainer";
 
-const Stack = createNativeStackNavigator();
+import TAFQuizScreen from "./src/screens/Assesments/TAF";
+import WFIRSQuizScreen from "./src/screens/Assesments/WFIRS";
 import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
 import TermsScreen from "./src/screens/Assesments/TermsScreen";
 import CreateReport from "./src/screens/Reports/createReport";
-
+const Stack = createNativeStackNavigator();
 const loadFonts = async () => {
   await Font.loadAsync({
     "Material Design Icons": require("./node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"),
@@ -89,6 +90,8 @@ function App() {
             />
             <Stack.Screen name="TermsScreen" component={TermsScreen} />
             <Stack.Screen name="QuizScreen" component={QuizScreen} />
+            <Stack.Screen name="WFIRSQuizScreen" component={WFIRSQuizScreen} />
+            <Stack.Screen name="TAFQuizScreen" component={TAFQuizScreen} />
             <Stack.Screen name="CreateReport" component={CreateReport} />
           </>
         )}
