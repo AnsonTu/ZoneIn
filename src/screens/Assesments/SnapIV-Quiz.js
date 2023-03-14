@@ -6,11 +6,8 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { Button, RadioButton } from "react-native-paper";
-import CheckBox from "react-native-checkbox";
+import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
-import Btn from "../../components/Btn";
-import { darkGreen } from "../../components/Constants";
 const questions1 = [
   {
     id: 1,
@@ -306,7 +303,7 @@ const questions3 = [
   },
 ];
 
-const QuizScreen = ({ navigation }) => {
+const SNAPQuizScreen = ({ navigation }) => {
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -349,7 +346,16 @@ const QuizScreen = ({ navigation }) => {
         Score1 += selectedOption1.score;
       }
     }
-    return Score1;
+
+    if (Score1 < 13) {
+      return "Symptoms not clinically significant";
+    } else if (Score1 < 18) {
+      return "Mild symptoms";
+    } else if (Score1 < 23) {
+      return "Moderate symptoms";
+    } else {
+      return "Severe symptoms";
+    }
   };
 
   const calculateScore2 = () => {
@@ -363,7 +369,15 @@ const QuizScreen = ({ navigation }) => {
         Score2 += selectedOption2.score;
       }
     }
-    return Score2;
+    if (Score2 < 8) {
+      return "Symptoms not clinically significant";
+    } else if (Score2 < 14) {
+      return "Mild symptoms";
+    } else if (Score2 < 19) {
+      return "Moderate symptoms";
+    } else {
+      return "Severe symptoms";
+    }
   };
 
   const calculateScore3 = () => {
@@ -377,10 +391,16 @@ const QuizScreen = ({ navigation }) => {
         Score3 += selectedOption3.score;
       }
     }
-    return Score3;
+
+    if (Score3 > 8) {
+      return "ODD present";
+    } else {
+      return "ODD not present";
+    }
   };
 
   const handleSubmit = () => {
+    setPage(page + 1);
     calculateScore1();
     calculateScore2();
     calculateScore3();
@@ -462,7 +482,7 @@ const QuizScreen = ({ navigation }) => {
               </View>
             ))}
         <View style={styles.navigationContainer}>
-          {page !== 0 && (
+          {page !== 0 && page !== 3 && (
             <TouchableOpacity
               style={styles.navigationButton}
               onPress={handlePrev}
@@ -470,7 +490,7 @@ const QuizScreen = ({ navigation }) => {
               <Text style={styles.navigationButtonText}>Previous</Text>
             </TouchableOpacity>
           )}
-          {page !== 2 && (
+          {page !== 2 && page !== 3 && (
             <TouchableOpacity
               style={styles.navigationButton}
               onPress={handleNext}
@@ -478,6 +498,7 @@ const QuizScreen = ({ navigation }) => {
               <Text style={{ paddingBottom: 100 }}>Next</Text>
             </TouchableOpacity>
           )}
+
           {page === 2 && (
             <TouchableOpacity
               style={[
@@ -490,17 +511,20 @@ const QuizScreen = ({ navigation }) => {
               <Text style={styles.navigationButtonText}>Submit</Text>
             </TouchableOpacity>
           )}
-        </View>
-        <View style={styles.scoreContainer}>
-          <Text style={styles.scoreText}>
-            Your score1 is: {calculateScore1()}
-          </Text>
-          <Text style={styles.scoreText}>
-            Your score2 is: {calculateScore2()}
-          </Text>
-          <Text style={styles.scoreText}>
-            Your score3 is: {calculateScore3()}
-          </Text>
+
+          {page === 3 && (
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreText}>
+                Your score1 is: {calculateScore1()}
+              </Text>
+              <Text style={styles.scoreText}>
+                Your score2 is: {calculateScore2()}
+              </Text>
+              <Text style={styles.scoreText}>
+                Your score3 is: {calculateScore3()}
+              </Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     );
@@ -539,5 +563,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 8,
   },
+  navigationButtonText: {
+    paddingBottom: 30,
+  },
 });
-export default QuizScreen;
+export default SNAPQuizScreen;

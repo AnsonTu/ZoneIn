@@ -75,7 +75,7 @@ const AssessmentsPage = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WFIRS-P"
-        Press={() => props.navigation.navigate("ReportsPage")}
+        Press={() => props.navigation.navigate("WFIRSQuizScreen")}
       />
 
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
@@ -85,7 +85,7 @@ const AssessmentsPage = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="TAF"
-        Press={() => props.navigation.navigate("ReportsPage")}
+        Press={() => props.navigation.navigate("TAFQuizScreen")}
       />
     </View>
   );
