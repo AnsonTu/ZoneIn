@@ -16,15 +16,14 @@ import PatientProfilesList from "./src/screens/Profiles/PatientProfilesList";
 import ReportsPage from "./src/screens/Reports/ReportsPage";
 import DocumentUploadPage from "./src/screens/Reports/UploadReport";
 import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
-
+import ResultsPage from "./src/screens/Assesments/ResultsPage";
 import AssessmentsPage from "./src/screens/Assesments/AssessmentsPage";
-
-import MainNavContainer from "./src/navigation/MainNavContainer";
-
-import TAFQuizScreen from "./src/screens/Assesments/TAF";
-import WFIRSQuizScreen from "./src/screens/Assesments/WFIRS";
-import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
 import TermsScreen from "./src/screens/Assesments/TermsScreen";
+import MainNavContainer from "./src/navigation/MainNavContainer";
+import WSRQuizScreen from "./src/screens/Assesments/WSR-II";
+import TAFQuizScreen from "./src/screens/Assesments/TAF";
+import SNAPQuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
+import WFIRSQuizScreen from "./src/screens/Assesments/WFIRS";
 import CreateReport from "./src/screens/Reports/createReport";
 const Stack = createNativeStackNavigator();
 const loadFonts = async () => {
@@ -89,8 +88,14 @@ function App() {
               component={CompletedAssesments}
             />
             <Stack.Screen name="TermsScreen" component={TermsScreen} />
-            <Stack.Screen name="QuizScreen" component={QuizScreen} />
+            <Stack.Screen name="SNAPQuizScreen" component={SNAPQuizScreen} />
             <Stack.Screen name="WFIRSQuizScreen" component={WFIRSQuizScreen} />
+            <Stack.Screen name="WSRQuizScreen" component={WSRQuizScreen} />
+            <Stack.Screen
+              name="ResultsPage"
+              component={ResultsPage}
+              screenOptions={{ headerShown: false }}
+            />
             <Stack.Screen name="TAFQuizScreen" component={TAFQuizScreen} />
             <Stack.Screen name="CreateReport" component={CreateReport} />
           </>

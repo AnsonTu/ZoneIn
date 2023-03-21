@@ -89,32 +89,32 @@ const AssessmentsPage = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="SNAP-IV 26"
-        Press={() => isPatientSelected("QuizScreen")}
+        Press={() => props.navigation.navigate("SNAPQuizScreen")}
       />
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WSR-II"
-        Press={() => isPatientSelected("ReportsPage")}
+        Press={() => props.navigation.navigate("WSRQuizScreen")}
       />
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-        Forms for Parents only
+        Forms for Parents only{" "}
       </Text>
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WFIRS-P"
-        Press={() => isPatientSelected("WFIRSQuizScreen")}
+        Press={() => props.navigation.navigate("WFIRSQuizScreen")}
       />
 
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-        Forms for Teachers only
+        Forms for Teachers only{" "}
       </Text>
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="TAF"
-        Press={() => isPatientSelected("TAFQuizScreen")}
+        Press={() => props.navigation.navigate("TAFQuizScreen")}
       />
     </View>
   );

@@ -8,8 +8,6 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
-import { addPatientAssessment } from "../../helpers/query";
-
 const questions1 = [
   {
     id: 1,
@@ -622,9 +620,7 @@ const questions6 = [
   },
 ];
 
-const WFIRSQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
-
+const WFIRSQuizScreen = ({ navigation }) => {
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -685,6 +681,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers1.length; i++) {
       const answerIndex = answers1[i];
       if (answerIndex !== null) {
+        console.log("questions1:", questions1);
+        console.log("i:", i);
         const selectedOption1 = questions1[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -709,7 +707,7 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score1 = calc_Score / Max_Score;
-    return Score1.toFixed(3);
+    return Score1;
   };
 
   const calculateScore2 = () => {
@@ -726,6 +724,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers2.length; i++) {
       const answerIndex = answers2[i];
       if (answerIndex !== null) {
+        console.log("questions2:", questions2);
+        console.log("i:", i);
         const selectedOption1 = questions2[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -750,7 +750,7 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score2 = calc_Score / Max_Score;
-    return Score2.toFixed(3);
+    return Score2;
   };
 
   const calculateScore3 = () => {
@@ -767,6 +767,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers3.length; i++) {
       const answerIndex = answers3[i];
       if (answerIndex !== null) {
+        console.log("questions3:", questions3);
+        console.log("i:", i);
         const selectedOption1 = questions3[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -791,7 +793,7 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score3 = calc_Score / Max_Score;
-    return Score3.toFixed(3);
+    return Score3;
   };
 
   const calculateScore4 = () => {
@@ -808,6 +810,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers4.length; i++) {
       const answerIndex = answers4[i];
       if (answerIndex !== null) {
+        console.log("questions4:", questions4);
+        console.log("i:", i);
         const selectedOption1 = questions4[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -832,7 +836,7 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score4 = calc_Score / Max_Score;
-    return Score4.toFixed(3);
+    return Score4;
   };
 
   const calculateScore5 = () => {
@@ -849,6 +853,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers5.length; i++) {
       const answerIndex = answers5[i];
       if (answerIndex !== null) {
+        console.log("questions5:", questions5);
+        console.log("i:", i);
         const selectedOption1 = questions5[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -873,7 +879,7 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score5 = calc_Score / Max_Score;
-    return Score5.toFixed(3);
+    return Score5;
   };
 
   const calculateScore6 = () => {
@@ -890,6 +896,8 @@ const WFIRSQuizScreen = (props) => {
     for (let i = 0; i < answers6.length; i++) {
       const answerIndex = answers6[i];
       if (answerIndex !== null) {
+        console.log("questions6:", questions6);
+        console.log("i:", i);
         const selectedOption1 = questions6[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -914,31 +922,73 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score6 = calc_Score / Max_Score;
-    return Score6.toFixed(3);
+    return Score6;
   };
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setPage(page + 1);
-    await addPatientAssessment(
-      patientInfo,
-      "WFIRS",
-      [
-        calculateScore1(),
-        calculateScore2(),
-        calculateScore3(),
-        calculateScore4(),
-        calculateScore5(),
-        calculateScore6(),
-      ],
-      [
-        ...answers1,
-        ...answers2,
-        ...answers3,
-        ...answers4,
-        ...answers5,
-        ...answers6,
-      ]
-    );
+    const score1 = calculateScore1();
+    const score2 = calculateScore2();
+    const score3 = calculateScore3();
+    const score4 = calculateScore4();
+    const score5 = calculateScore5();
+    let score6 = calculateScore6();
+
+    let diagnosis6 = "",
+      diagnosis_overall = "",
+      diagnosis_AE = "";
+    // Calculate overall score
+    let totalscore = (score1 + score2 + score3 + score4 + score5 + score6) / 6;
+    let totalA2E = (score1 + score2 + score3 + score4 + score5) / 5;
+    // Calculate sum and count of first five scores
+    let scoresFirstFive = [score1, score2, score3, score4, score5];
+    let sumFirstFive = scoresFirstFive.reduce((acc, score) => acc + score, 0);
+    letcountFirstFive = scoresFirstFive.filter((score) => score > 0).length;
+
+    if (totalscore > 0.65) {
+      diagnosis_overall = "Possible chance of ADHD";
+    } else if (totalscore > 1.5) {
+      diagnosis_overall = "High chance of ADHD";
+    }
+
+    if (sumFirstFive > 1.5 && countFirstFive >= 3) {
+      diagnosis_AE = "High chance of ADHD";
+    }
+    if (score6 > 0.5) {
+      diagnosis6 = "Concerning";
+    }
+    // TODO: Submit total score to server or store locally
+
+    score6 = score6.toFixed(2);
+    totalscore = totalscore.toFixed(2);
+    totalA2E = totalA2E.toFixed(2);
+    let id1 = 1,
+      id2 = 2,
+      id3 = 3;
+    const scores = [
+      {
+        title: "Section F",
+        score: score6,
+        maxScore: 0.5,
+        diagnosis: diagnosis6,
+        id: id1,
+      },
+      {
+        title: "Overall Score",
+        score: totalscore,
+        maxScore: 1.5,
+        diagnosis: diagnosis_overall,
+        id: id2,
+      },
+      {
+        title: "Sections A to E(3/6)",
+        score: totalA2E,
+        maxScore: 1.5,
+        diagnosis: diagnosis_AE,
+        id: id3,
+      },
+    ];
+
+    navigation.navigate("ResultsPage", { scores });
   };
 
   const canSubmit =
@@ -960,6 +1010,7 @@ const WFIRSQuizScreen = (props) => {
   } else if (!quizStarted) {
     return (
       <ScrollView style={styles.container}>
+        <Text style={styles.quizHeading}>Section A: Family</Text>
         {page === 0 &&
           questions1
             .slice(page * 10, (page + 1) * 10)
@@ -1094,56 +1145,27 @@ const WFIRSQuizScreen = (props) => {
             ))}
         <View style={styles.navigationContainer}>
           {page !== 0 && page !== 6 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handlePrev}
-            >
-              <Text style={styles.navigationButtonText}>Previous</Text>
+            <TouchableOpacity style={styles.button} onPress={handlePrev}>
+              <Text style={styles.buttonText}>Previous</Text>
             </TouchableOpacity>
           )}
           {page !== 5 && page !== 6 && (
             <TouchableOpacity
-              style={styles.navigationButton}
+              style={[styles.button, styles.rightButton]}
               onPress={handleNext}
             >
-              <Text style={{ paddingBottom: 100 }}>Next</Text>
+              <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           )}
 
           {page === 5 && (
             <TouchableOpacity
-              style={[
-                styles.navigationButton,
-                !canSubmit && styles.disabledButton,
-              ]}
-              onPress={() => handleSubmit(patientInfo)}
+              style={[styles.button, !canSubmit && styles.disabledButton]}
+              onPress={handleSubmit}
               disabled={!canSubmit}
             >
-              <Text style={styles.navigationButtonText}>Submit</Text>
+              <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-          )}
-
-          {page === 6 && (
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>
-                Your score1 is: {calculateScore1()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score2 is: {calculateScore2()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score3 is: {calculateScore3()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score4 is: {calculateScore4()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score5 is: {calculateScore5()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score6 is: {calculateScore6()}
-              </Text>
-            </View>
           )}
         </View>
       </ScrollView>
@@ -1154,10 +1176,11 @@ const WFIRSQuizScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
   },
   questionContainer: {
     marginBottom: 16,
+    padding: 10,
   },
   questionText: {
     fontSize: 16,
@@ -1173,7 +1196,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
   },
-  buttonContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
@@ -1185,6 +1208,34 @@ const styles = StyleSheet.create({
   },
   navigationButtonText: {
     paddingBottom: 30,
+  },
+  navigationButton: {
+    paddingBottom: 30,
+  },
+  button: {
+    flexDirection: "row",
+    width: "30%",
+    backgroundColor: "#BFDCE5",
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "#BFDCE5",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  disabledButton: {
+    backgroundColor: "#D3D3D3", // change the background color for disabled button
+    borderColor: "#D3D3D3", // change the border color for disabled button
   },
 });
 export default WFIRSQuizScreen;
