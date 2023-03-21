@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
+import { addPatientAssessment } from "../../helpers/query";
+
 const questions1 = [
   {
     id: 1,
@@ -305,7 +307,6 @@ const questions3 = [
 
 const SNAPQuizScreen = (props) => {
   const { patientInfo } = props.route.params;
-  console.log(patientInfo);
 
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
@@ -396,19 +397,14 @@ const SNAPQuizScreen = (props) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
-    calculateScore1();
-    calculateScore2();
-    calculateScore3();
     await addPatientAssessment(
-      params.selectedPatient,
+      patientInfo,
       "SNAPIV",
-      answers1,
-      answers2,
-      answers3
+      [calculateScore1(), calculateScore2(), calculateScore3()],
+      [...answers1, ...answers2, ...answers3]
     );
-    // TODO: Submit total score to server or store locally
   };
 
   const canSubmit =
@@ -509,7 +505,7 @@ const SNAPQuizScreen = (props) => {
                 styles.navigationButton,
                 !canSubmit && styles.disabledButton,
               ]}
-              onPress={handleSubmit}
+              onPress={() => handleSubmit(patientInfo)}
               disabled={!canSubmit}
             >
               <Text style={styles.navigationButtonText}>Submit</Text>
