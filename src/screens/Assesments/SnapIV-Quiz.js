@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
-import { addPatientAssessment } from "../../helpers/query";
-
+import ResultsPage from "./ResultsPage";
 const questions1 = [
   {
     id: 1,
@@ -305,9 +304,7 @@ const questions3 = [
   },
 ];
 
-const SNAPQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
-
+const SNAPQuizScreen = ({ navigation }) => {
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -344,20 +341,14 @@ const SNAPQuizScreen = (props) => {
     for (let i = 0; i < answers1.length; i++) {
       const answerIndex = answers1[i];
       if (answerIndex !== null) {
+        console.log("questions1:", questions1);
+        console.log("i:", i);
         const selectedOption1 = questions1[i].options[answerIndex];
         Score1 += selectedOption1.score;
       }
     }
 
-    if (Score1 < 13) {
-      return "Symptoms not clinically significant";
-    } else if (Score1 < 18) {
-      return "Mild symptoms";
-    } else if (Score1 < 23) {
-      return "Moderate symptoms";
-    } else {
-      return "Severe symptoms";
-    }
+    return Score1;
   };
 
   const calculateScore2 = () => {
@@ -365,19 +356,13 @@ const SNAPQuizScreen = (props) => {
     for (let i = 0; i < answers2.length; i++) {
       const answerIndex2 = answers2[i];
       if (answerIndex2 !== null) {
+        console.log("questions2:", questions2);
+        console.log("i:", i);
         const selectedOption2 = questions2[i].options[answerIndex2];
         Score2 += selectedOption2.score;
       }
     }
-    if (Score2 < 8) {
-      return "Symptoms not clinically significant";
-    } else if (Score2 < 14) {
-      return "Mild symptoms";
-    } else if (Score2 < 19) {
-      return "Moderate symptoms";
-    } else {
-      return "Severe symptoms";
-    }
+    return Score2;
   };
 
   const calculateScore3 = () => {
@@ -385,26 +370,80 @@ const SNAPQuizScreen = (props) => {
     for (let i = 0; i < answers3.length; i++) {
       const answerIndex = answers3[i];
       if (answerIndex !== null) {
+        console.log("questions1:", questions3);
+        console.log("i:", i);
         const selectedOption3 = questions3[i].options[answerIndex];
         Score3 += selectedOption3.score;
       }
     }
 
-    if (Score3 > 8) {
-      return "ODD present";
-    } else {
-      return "ODD not present";
-    }
+    return Score3;
   };
 
-  const handleSubmit = async (patientInfo) => {
+  const handleSubmit = () => {
     setPage(page + 1);
-    await addPatientAssessment(
-      patientInfo,
-      "SNAPIV",
-      [calculateScore1(), calculateScore2(), calculateScore3()],
-      [...answers1, ...answers2, ...answers3]
-    );
+    const score1 = calculateScore1();
+    const score2 = calculateScore2();
+    const score3 = calculateScore3();
+    let diagnosis1 = "";
+    let diagnosis2 = "";
+    let diagnosis3 = "";
+    let id1 = 1,
+      id2 = 2,
+      id3 = 3;
+    if (score1 < 13) {
+      diagnosis1 = "Symptoms not clinically significant";
+    } else if (score1 < 18) {
+      diagnosis1 = "Mild symptoms";
+    } else if (score1 < 23) {
+      diagnosis1 = "Moderate symptoms";
+    } else {
+      diagnosis1 = "Severe symptoms";
+    }
+
+    if (score2 < 8) {
+      diagnosis2 = "Symptoms not clinically significant";
+    } else if (score2 < 14) {
+      diagnosis2 = "Mild symptoms";
+    } else if (score2 < 19) {
+      diagnosis2 = "Moderate symptoms";
+    } else {
+      diagnosis2 = "Severe symptoms";
+    }
+
+    if (score3 > 8) {
+      diagnosis3 = "ODD present";
+    } else {
+      diagnosis3 = "ODD not present";
+    }
+
+    const scores = [
+      {
+        title: "Inattention Subset",
+        score: score1,
+        maxScore: 27,
+        minScore: 0,
+        diagnosis: diagnosis1,
+        id: id1,
+      },
+      {
+        title: "Hyperactivity/Impulsivity Subset",
+        score: score2,
+        maxScore: 27,
+        minScore: 0,
+        diagnosis: diagnosis2,
+        id: id2,
+      },
+      {
+        title: "ODD (Oppositional Defiant Disorder) Subset",
+        score: score3,
+        maxScore: 24,
+        minScore: 0,
+        diagnosis: diagnosis3,
+        id: id3,
+      },
+    ];
+    navigation.navigate("ResultsPage", { scores });
   };
 
   const canSubmit =
@@ -417,6 +456,11 @@ const SNAPQuizScreen = (props) => {
       setTermsAgreed(true);
     }
   }
+  const scores = {
+    score1: calculateScore1(),
+    score2: calculateScore2(),
+    score3: calculateScore3(),
+  };
 
   if (!termsAgreed) {
     return <TermsAndConditions onAgree={handleAgree} />;
@@ -483,47 +527,26 @@ const SNAPQuizScreen = (props) => {
             ))}
         <View style={styles.navigationContainer}>
           {page !== 0 && page !== 3 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handlePrev}
-            >
-              <Text style={styles.navigationButtonText}>Previous</Text>
+            <TouchableOpacity style={styles.button} onPress={handlePrev}>
+              <Text style={styles.buttonText}>Previous</Text>
             </TouchableOpacity>
           )}
           {page !== 2 && page !== 3 && (
             <TouchableOpacity
-              style={styles.navigationButton}
+              style={[styles.button, styles.rightButton]}
               onPress={handleNext}
             >
-              <Text style={{ paddingBottom: 100 }}>Next</Text>
+              <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           )}
-
           {page === 2 && (
             <TouchableOpacity
-              style={[
-                styles.navigationButton,
-                !canSubmit && styles.disabledButton,
-              ]}
-              onPress={() => handleSubmit(patientInfo)}
+              style={[styles.button, !canSubmit && styles.disabledButton]}
+              onPress={handleSubmit}
               disabled={!canSubmit}
             >
-              <Text style={styles.navigationButtonText}>Submit</Text>
+              <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-          )}
-
-          {page === 3 && (
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>
-                Your score1 is: {calculateScore1()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score2 is: {calculateScore2()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score3 is: {calculateScore3()}
-              </Text>
-            </View>
           )}
         </View>
       </ScrollView>
@@ -553,7 +576,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
   },
-  buttonContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
@@ -564,7 +587,35 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   navigationButtonText: {
-    paddingBottom: 30,
+    paddingBottom: 50,
+  },
+  navigationButton: {
+    paddingBottom: 50,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+  },
+  button: {
+    flexDirection: "row",
+    width: "30%",
+    backgroundColor: "#BFDCE5",
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "#BFDCE5",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  disabledButton: {
+    backgroundColor: "#D3D3D3", // change the background color for disabled button
+    borderColor: "#D3D3D3", // change the border color for disabled button
   },
 });
 export default SNAPQuizScreen;
