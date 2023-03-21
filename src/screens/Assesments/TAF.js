@@ -12,6 +12,8 @@ import TermsAndConditions from "./TermsScreen";
 import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
 import { TextInput } from "react-native";
+import { addPatientAssessment } from "../../helpers/query";
+
 const questions1 = [
   {
     id: 1,
@@ -294,12 +296,16 @@ const questions4 = [
   },
 ];
 
-const TAFQuizScreen = ({ navigation }) => {
+const TAFQuizScreen = (props) => {
+  const { patientInfo } = props.route.params;
+
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
   const [answers3, setAnswers3] = useState(Array(questions3.length).fill(null));
   const [answers4, setAnswers4] = useState(Array(questions4.length).fill(null));
+  const [scores, setScores] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
 
@@ -322,20 +328,108 @@ const TAFQuizScreen = ({ navigation }) => {
       setAnswers2(newAnswers);
     }
   };
+
   const handleAnswer1 = (index, text) => {
     if (page === 2) {
       const newAnswers = [...answers3];
       newAnswers[index] = text;
       setAnswers3(newAnswers);
-    } else if (page === 2) {
+    } else if (page === 3) {
       const newAnswers = [...answers4];
       newAnswers[index] = text;
       setAnswers4(newAnswers);
     }
   };
 
-  const handleSubmit = () => {
-    // TODO: Submit total score to server or store locally
+  const handleSubmit = async (patientInfo) => {
+    setIsLoading(true);
+    const formattedTextInputs = [
+      {
+        question: 1,
+        response: answers3[0],
+      },
+      {
+        question: 2,
+        response: answers3[3],
+      },
+      {
+        question: 3,
+        response: answers3[4],
+      },
+      {
+        question: 4,
+        response: answers3[5],
+      },
+      {
+        question: 5,
+        response: answers3[6],
+      },
+      {
+        question: 6,
+        response: answers3[7],
+      },
+      {
+        question: 7,
+        response: answers3[8],
+      },
+      {
+        question: 8,
+        response: answers3[9],
+      },
+      {
+        question: 9,
+        response: answers4[0],
+      },
+      {
+        question: 10,
+        response: answers4[1],
+      },
+      {
+        question: 11,
+        response: answers4[2],
+      },
+      {
+        question: 12,
+        response: answers4[3],
+      },
+      {
+        question: 13,
+        response: answers4[4],
+      },
+      {
+        question: 14,
+        response: answers4[7],
+      },
+      {
+        question: 15,
+        response: answers4[8],
+      },
+      {
+        question: 16,
+        response: answers4[9],
+      },
+    ];
+
+    await fetch("https://ZoneIn.sarahlong4.repl.co/assessment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedTextInputs),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        setScores(res[0]);
+        addPatientAssessment(patientInfo, "TAF", res, [
+          ...answers1,
+          ...answers2,
+          ...answers3,
+          ...answers4,
+        ]);
+      })
+      .catch((e) => console.error(e));
+    setIsLoading(false);
+    setPage(page + 1);
   };
 
   const canSubmit =
@@ -427,7 +521,7 @@ const TAFQuizScreen = ({ navigation }) => {
             ))}
 
         <View style={styles.navigationContainer}>
-          {page !== 0 && page != 4 && (
+          {page > 0 && page < 4 && (
             <TouchableOpacity
               style={styles.navigationButton}
               onPress={handlePrev}
@@ -435,7 +529,7 @@ const TAFQuizScreen = ({ navigation }) => {
               <Text style={styles.navigationButtonText}>Previous</Text>
             </TouchableOpacity>
           )}
-          {page !== 3 && page != 4 && (
+          {page < 3 && (
             <TouchableOpacity
               style={styles.navigationButton}
               onPress={handleNext}
@@ -443,17 +537,25 @@ const TAFQuizScreen = ({ navigation }) => {
               <Text style={{ paddingBottom: 100 }}>Next</Text>
             </TouchableOpacity>
           )}
-          {page === 4 && (
+          {page === 3 && (
             <TouchableOpacity
               style={[
                 styles.navigationButton,
                 !canSubmit && styles.disabledButton,
               ]}
-              onPress={handleSubmit}
-              disabled={!canSubmit}
+              onPress={() => handleSubmit(patientInfo)}
+              disabled={!canSubmit || isLoading}
             >
-              <Text style={styles.navigationButtonText}>Submit</Text>
+              <Text style={{ paddingBottom: 100 }}>
+                {isLoading ? "Processing..." : "Submit"}
+              </Text>
             </TouchableOpacity>
+          )}
+          {page === 4 && (
+            <View>
+              <Text>Hyperactive Symptoms: {scores.hyperactive}</Text>
+              <Text>Inattentive Symptoms: {scores.inattentive}</Text>
+            </View>
           )}
         </View>
       </ScrollView>

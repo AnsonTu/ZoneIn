@@ -103,6 +103,35 @@ const deleteChildProfile = async (childProfileDocId) => {
     .catch((e) => console.error("Error deleting profile: ", e));
 };
 
+const addPatientAssessment = async (
+  patient,
+  assessmentType,
+  assessmentScores,
+  assessmentAnswers
+) => {
+  const scores = [];
+  const answers = [];
+  for (let i = 0; i < assessmentScores.length; i++) {
+    scores[i] = assessmentScores[i];
+  }
+  for (let i = 0; i < assessmentAnswers.length; i++) {
+    answers[i] = assessmentAnswers[i];
+  }
+
+  try {
+    await addDoc(collection(db, "assessments"), {
+      patientId: patient.docId,
+      firstName: patient.firstName,
+      lastName: patient.lastName,
+      assessmentType,
+      scores,
+      answers,
+    });
+  } catch (e) {
+    console.error("Error creating child profile: ", e);
+  }
+};
+
 export {
   getUserInfo,
   updateUserInfo,
@@ -110,4 +139,5 @@ export {
   addChildProfile,
   updateChildProfile,
   deleteChildProfile,
+  addPatientAssessment,
 };

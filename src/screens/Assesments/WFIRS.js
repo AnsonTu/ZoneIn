@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
+import { addPatientAssessment } from "../../helpers/query";
+
 const questions1 = [
   {
     id: 1,
@@ -620,7 +622,9 @@ const questions6 = [
   },
 ];
 
-const WFIRSQuizScreen = ({ navigation }) => {
+const WFIRSQuizScreen = (props) => {
+  const { patientInfo } = props.route.params;
+
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -681,8 +685,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers1.length; i++) {
       const answerIndex = answers1[i];
       if (answerIndex !== null) {
-        console.log("questions1:", questions1);
-        console.log("i:", i);
         const selectedOption1 = questions1[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -707,7 +709,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score1 = calc_Score / Max_Score;
-    return Score1;
+    return Score1.toFixed(3);
   };
 
   const calculateScore2 = () => {
@@ -724,8 +726,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers2.length; i++) {
       const answerIndex = answers2[i];
       if (answerIndex !== null) {
-        console.log("questions2:", questions2);
-        console.log("i:", i);
         const selectedOption1 = questions2[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -750,7 +750,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score2 = calc_Score / Max_Score;
-    return Score2;
+    return Score2.toFixed(3);
   };
 
   const calculateScore3 = () => {
@@ -767,8 +767,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers3.length; i++) {
       const answerIndex = answers3[i];
       if (answerIndex !== null) {
-        console.log("questions3:", questions3);
-        console.log("i:", i);
         const selectedOption1 = questions3[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -793,7 +791,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score3 = calc_Score / Max_Score;
-    return Score3;
+    return Score3.toFixed(3);
   };
 
   const calculateScore4 = () => {
@@ -810,8 +808,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers4.length; i++) {
       const answerIndex = answers4[i];
       if (answerIndex !== null) {
-        console.log("questions4:", questions4);
-        console.log("i:", i);
         const selectedOption1 = questions4[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -836,7 +832,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score4 = calc_Score / Max_Score;
-    return Score4;
+    return Score4.toFixed(3);
   };
 
   const calculateScore5 = () => {
@@ -853,8 +849,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers5.length; i++) {
       const answerIndex = answers5[i];
       if (answerIndex !== null) {
-        console.log("questions5:", questions5);
-        console.log("i:", i);
         const selectedOption1 = questions5[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -879,7 +873,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score5 = calc_Score / Max_Score;
-    return Score5;
+    return Score5.toFixed(3);
   };
 
   const calculateScore6 = () => {
@@ -896,8 +890,6 @@ const WFIRSQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers6.length; i++) {
       const answerIndex = answers6[i];
       if (answerIndex !== null) {
-        console.log("questions6:", questions6);
-        console.log("i:", i);
         const selectedOption1 = questions6[i].options[answerIndex];
         if (selectedOption1.score == 0) {
           countA++;
@@ -922,17 +914,31 @@ const WFIRSQuizScreen = ({ navigation }) => {
     Max_Score = marked * 3;
 
     Score6 = calc_Score / Max_Score;
-    return Score6;
+    return Score6.toFixed(3);
   };
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     setPage(page + 1);
-    calculateScore1();
-    calculateScore2();
-    calculateScore3();
-    calculateScore4();
-    calculateScore5();
-    calculateScore6();
-    // TODO: Submit total score to server or store locally
+    await addPatientAssessment(
+      patientInfo,
+      "WFIRS",
+      [
+        calculateScore1(),
+        calculateScore2(),
+        calculateScore3(),
+        calculateScore4(),
+        calculateScore5(),
+        calculateScore6(),
+      ],
+      [
+        ...answers1,
+        ...answers2,
+        ...answers3,
+        ...answers4,
+        ...answers5,
+        ...answers6,
+      ]
+    );
   };
 
   const canSubmit =
@@ -1053,7 +1059,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
                     <RadioButton
                       value={optionIndex}
                       status={
-                        answers4[index] === optionIndex
+                        answers5[index] === optionIndex
                           ? "checked"
                           : "unchecked"
                       }
@@ -1075,7 +1081,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
                     <RadioButton
                       value={optionIndex}
                       status={
-                        answers5[index] === optionIndex
+                        answers6[index] === optionIndex
                           ? "checked"
                           : "unchecked"
                       }
@@ -1110,7 +1116,7 @@ const WFIRSQuizScreen = ({ navigation }) => {
                 styles.navigationButton,
                 !canSubmit && styles.disabledButton,
               ]}
-              onPress={handleSubmit}
+              onPress={() => handleSubmit(patientInfo)}
               disabled={!canSubmit}
             >
               <Text style={styles.navigationButtonText}>Submit</Text>

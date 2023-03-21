@@ -16,8 +16,12 @@ export default function TermsAndConditions(props) {
   return (
     <View>
       <Text>Terms and Conditions:</Text>
-      <CheckBox value={checked} onChange={handleCheck} />
-      <Button title="Agree" onPress={handleAgree} disabled={!checked} />
+      <CheckBox
+        label="I agree to the terms and conditions"
+        value={checked}
+        onChange={handleCheck}
+      />
+      <Button title="Proceed" onPress={handleAgree} disabled={!checked} />
     </View>
   );
 }

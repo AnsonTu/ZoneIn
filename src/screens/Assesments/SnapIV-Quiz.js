@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
+import { addPatientAssessment } from "../../helpers/query";
+
 const questions1 = [
   {
     id: 1,
@@ -303,7 +305,9 @@ const questions3 = [
   },
 ];
 
-const SNAPQuizScreen = ({ navigation }) => {
+const SNAPQuizScreen = (props) => {
+  const { patientInfo } = props.route.params;
+
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -340,8 +344,6 @@ const SNAPQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers1.length; i++) {
       const answerIndex = answers1[i];
       if (answerIndex !== null) {
-        console.log("questions1:", questions1);
-        console.log("i:", i);
         const selectedOption1 = questions1[i].options[answerIndex];
         Score1 += selectedOption1.score;
       }
@@ -363,8 +365,6 @@ const SNAPQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers2.length; i++) {
       const answerIndex2 = answers2[i];
       if (answerIndex2 !== null) {
-        console.log("questions2:", questions2);
-        console.log("i:", i);
         const selectedOption2 = questions2[i].options[answerIndex2];
         Score2 += selectedOption2.score;
       }
@@ -385,8 +385,6 @@ const SNAPQuizScreen = ({ navigation }) => {
     for (let i = 0; i < answers3.length; i++) {
       const answerIndex = answers3[i];
       if (answerIndex !== null) {
-        console.log("questions1:", questions3);
-        console.log("i:", i);
         const selectedOption3 = questions3[i].options[answerIndex];
         Score3 += selectedOption3.score;
       }
@@ -399,12 +397,14 @@ const SNAPQuizScreen = ({ navigation }) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
-    calculateScore1();
-    calculateScore2();
-    calculateScore3();
-    // TODO: Submit total score to server or store locally
+    await addPatientAssessment(
+      patientInfo,
+      "SNAPIV",
+      [calculateScore1(), calculateScore2(), calculateScore3()],
+      [...answers1, ...answers2, ...answers3]
+    );
   };
 
   const canSubmit =
@@ -505,7 +505,7 @@ const SNAPQuizScreen = ({ navigation }) => {
                 styles.navigationButton,
                 !canSubmit && styles.disabledButton,
               ]}
-              onPress={handleSubmit}
+              onPress={() => handleSubmit(patientInfo)}
               disabled={!canSubmit}
             >
               <Text style={styles.navigationButtonText}>Submit</Text>
