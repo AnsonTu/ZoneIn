@@ -106,11 +106,30 @@ const deleteChildProfile = async (childProfileDocId) => {
 const addPatientAssessment = async (
   patient,
   assessmentType,
-  ...assessmentAnswers
+  assessmentScores,
+  assessmentAnswers
 ) => {
-  console.log(patient);
-  console.log(assessmentType);
-  console.log(assessmentAnswers);
+  const scores = [];
+  const answers = [];
+  for (let i = 0; i < assessmentScores.length; i++) {
+    scores[i] = assessmentScores[i];
+  }
+  for (let i = 0; i < assessmentAnswers.length; i++) {
+    answers[i] = assessmentAnswers[i];
+  }
+
+  try {
+    await addDoc(collection(db, "assessments"), {
+      patientId: patient.docId,
+      firstName: patient.firstName,
+      lastName: patient.lastName,
+      assessmentType,
+      scores,
+      answers,
+    });
+  } catch (e) {
+    console.error("Error creating child profile: ", e);
+  }
 };
 
 export {
