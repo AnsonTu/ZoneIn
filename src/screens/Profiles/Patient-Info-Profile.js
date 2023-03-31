@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { updateChildProfile } from "../../helpers/query";
+import { darkGreen, green } from "../../components/Constants";
 
 const Patient_Info_Profile = (props) => {
   const { params } = props.route;
@@ -97,20 +98,26 @@ const Patient_Info_Profile = (props) => {
             value={editedPatientLastName}
             onChangeText={setEditedPatientLastName}
           />
+          <Text
+            style={{
+              fontSize: 15,
+            }}
+          ></Text>
           <TouchableOpacity
             style={{
+              backgroundColor: "rgb(220, 220, 220)",
               width: "78%",
+              borderRadius: 10,
             }}
             onPress={() => setIsDateModalVisible(true)}
           >
             <Text
               style={{
-                backgroundColor: "rgb(220, 220, 220)",
-                fontSize: 15,
-                paddingVertical: 10,
+                fontSize: 18,
+                color: darkGreen,
                 paddingHorizontal: 20,
-                marginBottom: 12,
-                borderRadius: 25,
+                marginBottom: 11,
+                marginTop: 11,
               }}
             >
               {editedPatientDOB.toISOString().split("T")[0]}
@@ -118,14 +125,27 @@ const Patient_Info_Profile = (props) => {
           </TouchableOpacity>
           {isDateModalVisible && (
             <RNDateTimePicker
+              style={{
+                fontSize: 18,
+                paddingVertical: 10,
+                color: darkGreen,
+                marginBottom: 12,
+              }}
               value={editedPatientDOB}
               onChange={onDateChange}
             />
           )}
+          <Text
+            style={{
+              paddingTop: 10,
+
+              fontSize: 16,
+              textAlign: "right",
+            }}
+          ></Text>
           <SelectDropdown
             data={genders}
             defaultValue={editedPatientSex}
-            buttonStyle={{ borderWidth: 2 }}
             onSelect={(selectedItem) => {
               setEditedPatientSex(selectedItem);
             }}
@@ -139,6 +159,13 @@ const Patient_Info_Profile = (props) => {
             dropdownStyle={styles.dropdown4DropdownStyle}
             rowStyle={styles.dropdown4RowStyle}
             rowTextStyle={styles.dropdown4RowTxtStyle}
+            buttonStyle={styles.dropdown4RowButtonStyle}
+            defaultButtonText={"Pick a Gender"}
+            buttonTextStyle={{
+              ...styles.dropdownButtonTextStyle,
+              textAlign: "left",
+              color: darkGreen, // add this line
+            }}
           />
           <View style={styles.buttonContainer}>
             <TouchableOpacity
@@ -164,27 +191,30 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",
+    width: "95%",
   },
   patientTile: {
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 15,
-    width: "100%",
+    width: "98%",
     height: "15%",
     paddingHorizontal: 15,
     paddingVertical: 15,
     marginVertical: 10,
-    backgroundColor: "#83C5BE",
-    margin: 10,
+    backgroundColor: darkGreen,
+    marginLeft: 15,
+    marginTop: 35,
     borderRadius: 5,
   },
   buttonText: {
     fontSize: 20,
     paddingLeft: 20,
+    color: "white",
   },
   buttonContainer1: {
     flex: 1,
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "flex-end",
   },
   modalContainer: {
@@ -204,15 +234,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    height: 40,
-    width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    color: darkGreen,
+    paddingHorizontal: 20,
+    height: "5%",
+    width: "78%",
+    backgroundColor: "rgb(220,220, 220)",
+    marginVertical: 10,
+    fontSize: 18,
+    fontSize: 18,
+  },
+  dropdown4RowButtonStyle: {
+    borderRadius: 10,
+    color: darkGreen,
+    height: "5%",
+    width: "78%",
+    justifyContent: "flex-start",
+    backgroundColor: "rgb(220,220, 220)",
   },
   EditPageButton: {
-    backgroundColor: "green",
+    backgroundColor: green,
     padding: 10,
     margin: 5,
     borderRadius: 5,

@@ -10,7 +10,7 @@ import { Button, RadioButton } from "react-native-paper";
 import CheckBox from "react-native-checkbox";
 import TermsAndConditions from "./TermsScreen";
 import Btn from "../../components/Btn";
-import { darkGreen } from "../../components/Constants";
+import { darkGreen, green } from "../../components/Constants";
 import { TextInput } from "react-native";
 import { addPatientAssessment } from "../../helpers/query";
 
@@ -449,104 +449,118 @@ const TAFQuizScreen = (props) => {
   } else if (!quizStarted) {
     return (
       <ScrollView style={styles.container}>
-        {page === 0 &&
-          questions1
-            .slice(page * 10, (page + 1) * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers1[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 1 &&
-          questions2
-            .slice((page - 1) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers2[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 2 &&
-          questions3
-            .slice((page - 2) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={answers3[index] || ""}
-                  onChangeText={(text) => handleAnswer1(index, text)}
-                />
-              </View>
-            ))}
-        {page === 3 &&
-          questions4
-            .slice((page - 3) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={answers4[index] || ""}
-                  onChangeText={(text) => handleAnswer1(index, text)}
-                />
-              </View>
-            ))}
+        {page === 0 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section 1: Academic Performance(Reading, Writing and Mathematics)
+            </Text>
+            {questions1
+              .slice(page * 10, (page + 1) * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers1[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 1 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section 2: Classroom Performance
+            </Text>
+            {questions2
+              .slice((page - 1) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers2[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 2 && (
+          <View>
+            <Text style={styles.SectionHeader}>Section 3: TAF</Text>
+            {questions3
+              .slice((page - 2) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={answers3[index] || ""}
+                    onChangeText={(text) => handleAnswer1(index, text)}
+                  />
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 3 && (
+          <View>
+            <Text style={styles.SectionHeader}>Section 3 - Part 2: TAF</Text>
+            {questions4
+              .slice((page - 3) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={answers4[index] || ""}
+                    onChangeText={(text) => handleAnswer1(index, text)}
+                  />
+                </View>
+              ))}
+          </View>
+        )}
 
         <View style={styles.navigationContainer}>
           {page > 0 && page < 4 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handlePrev}
-            >
-              <Text style={styles.navigationButtonText}>Previous</Text>
+            <TouchableOpacity style={styles.button} onPress={handlePrev}>
+              <Text style={styles.buttonText}>Previous</Text>
             </TouchableOpacity>
           )}
           {page < 3 && (
             <TouchableOpacity
-              style={styles.navigationButton}
+              style={[styles.button, styles.rightButton]}
               onPress={handleNext}
             >
-              <Text style={{ paddingBottom: 100 }}>Next</Text>
+              <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           )}
           {page === 3 && (
             <TouchableOpacity
-              style={[
-                styles.navigationButton,
-                !canSubmit && styles.disabledButton,
-              ]}
+              style={[styles.button, !canSubmit && styles.disabledButton]}
               onPress={() => handleSubmit(patientInfo)}
               disabled={!canSubmit || isLoading}
             >
-              <Text style={{ paddingBottom: 100 }}>
+              <Text style={styles.buttonText}>
                 {isLoading ? "Processing..." : "Submit"}
               </Text>
             </TouchableOpacity>
@@ -569,18 +583,29 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   textInput: {
-    borderWidth: 1,
-    borderColor: "gray",
+    borderWidth: 0, // remove border to avoid overlapping with box
     borderRadius: 5,
     padding: 10,
     marginTop: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // add width and height to create a box
+    width: "100%",
+    height: 100,
   },
   questionContainer: {
     marginBottom: 16,
   },
   questionText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 8,
   },
   optionContainer: {
@@ -588,11 +613,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
+  SectionHeader: {
+    fontSize: 22,
+    fontWeight: "bold",
+    paddingBottom: 15,
+  },
   optionText: {
     fontSize: 14,
     marginLeft: 8,
+    fontWeight: "300",
   },
-  buttonContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
@@ -601,6 +632,37 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     marginHorizontal: 8,
+  },
+  navigationButtonText: {
+    paddingBottom: 50,
+  },
+  navigationButton: {
+    paddingBottom: 50,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+  },
+  button: {
+    flexDirection: "row",
+    width: "30%",
+    backgroundColor: green,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#BFDCE5",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  disabledButton: {
+    backgroundColor: green, // change the background color for disabled button
+    borderColor: "#D3D3D3", // change the border color for disabled button
   },
 });
 export default TAFQuizScreen;

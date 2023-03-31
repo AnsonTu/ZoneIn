@@ -9,6 +9,8 @@ import {
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
 import { addPatientAssessment } from "../../helpers/query";
+import ProgressBar from "react-native-progress/Bar";
+import { darkGreen, green } from "../../components/Constants";
 
 const questions1 = [
   {
@@ -634,6 +636,28 @@ const WFIRSQuizScreen = (props) => {
   const [answers6, setAnswers6] = useState(Array(questions6.length).fill(null));
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
+  let [Score1, setScore1] = useState(0);
+  let [Score2, setScore2] = useState(0);
+  let [Score3, setScore3] = useState(0);
+  let [Score4, setScore4] = useState(0);
+  let [Score5, setScore5] = useState(0);
+  let [Score6, setScore6] = useState(0);
+
+  const totalQuestions =
+    questions1.length +
+    questions2.length +
+    questions3.length +
+    questions4.length +
+    questions5.length +
+    questions6.length;
+  const answeredQuestions =
+    answers1.filter((answer) => answer !== null).length +
+    answers2.filter((answer) => answer !== null).length +
+    answers3.filter((answer) => answer !== null).length +
+    answers4.filter((answer) => answer !== null).length +
+    answers5.filter((answer) => answer !== null).length +
+    answers6.filter((answer) => answer !== null).length;
+  const progress = answeredQuestions / totalQuestions;
 
   const handleNext = () => {
     setPage(page + 1);
@@ -672,7 +696,6 @@ const WFIRSQuizScreen = (props) => {
   };
 
   const calculateScore1 = () => {
-    let Score1 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -709,11 +732,11 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score1 = calc_Score / Max_Score;
+    setScore1(Score1);
     return Score1.toFixed(3);
   };
 
   const calculateScore2 = () => {
-    let Score2 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -750,11 +773,11 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score2 = calc_Score / Max_Score;
+    setScore2(Score2);
     return Score2.toFixed(3);
   };
 
   const calculateScore3 = () => {
-    let Score3 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -791,11 +814,12 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score3 = calc_Score / Max_Score;
+
+    setScore3(Score3);
     return Score3.toFixed(3);
   };
 
   const calculateScore4 = () => {
-    let Score4 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -832,11 +856,11 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score4 = calc_Score / Max_Score;
+    setScore4(Score4);
     return Score4.toFixed(3);
   };
 
   const calculateScore5 = () => {
-    let Score5 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -873,11 +897,11 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score5 = calc_Score / Max_Score;
+    setScore5(Score5);
     return Score5.toFixed(3);
   };
 
   const calculateScore6 = () => {
-    let Score6 = 0;
     let countA = 0;
     let countB = 0;
     let countC = 0;
@@ -914,11 +938,58 @@ const WFIRSQuizScreen = (props) => {
     Max_Score = marked * 3;
 
     Score6 = calc_Score / Max_Score;
+    setScore6(Score6);
     return Score6.toFixed(3);
   };
 
   const handleSubmit = async () => {
     setPage(page + 1);
+    const scores = [
+      {
+        title: "Inattention Subset",
+        score: Score1,
+        maxScore: 27,
+        diagnosis: calculateScore1(),
+        id: 1,
+      },
+      {
+        title: "Hyperactivity/Impulsivity Subset",
+        score: Score2,
+        maxScore: 27,
+        diagnosis: calculateScore2(),
+        id: 2,
+      },
+      {
+        title: "ODD (Oppositional Defiant Disorder) Subset",
+        score: Score3,
+        maxScore: 24,
+        diagnosis: calculateScore3(),
+        id: 3,
+      },
+      {
+        title: "Inattention Subset",
+        score: Score4,
+        maxScore: 27,
+        diagnosis: calculateScore4(),
+        id: 1,
+      },
+      {
+        title: "Hyperactivity/Impulsivity Subset",
+        score: Score5,
+        maxScore: 27,
+        diagnosis: calculateScore5(),
+        id: 2,
+      },
+      {
+        title: "ODD (Oppositional Defiant Disorder) Subset",
+        score: Score6,
+        maxScore: 24,
+        diagnosis: calculateScore6(),
+        id: 3,
+      },
+    ];
+    console.log("this is scote 3:" + Score3);
+    props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
       patientInfo,
       "WFIRS",
@@ -960,191 +1031,202 @@ const WFIRSQuizScreen = (props) => {
   } else if (!quizStarted) {
     return (
       <ScrollView style={styles.container}>
-        {page === 0 &&
-          questions1
-            .slice(page * 10, (page + 1) * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers1[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 1 &&
-          questions2
-            .slice((page - 1) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers2[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 2 &&
-          questions3
-            .slice((page - 2) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers3[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 3 &&
-          questions4
-            .slice((page - 3) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers4[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 4 &&
-          questions5
-            .slice((page - 4) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers5[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        {page === 5 &&
-          questions6
-            .slice((page - 5) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers6[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        <View style={styles.navigationContainer}>
-          {page !== 0 && page !== 6 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handlePrev}
-            >
-              <Text style={styles.navigationButtonText}>Previous</Text>
-            </TouchableOpacity>
-          )}
-          {page !== 5 && page !== 6 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handleNext}
-            >
-              <Text style={{ paddingBottom: 100 }}>Next</Text>
-            </TouchableOpacity>
-          )}
+        {page === 0 && (
+          <View>
+            <Text style={styles.SectionHeader}>Section A: Family</Text>
+            {questions1
+              .slice(page * 10, (page + 1) * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers1[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 1 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section B: School: Learning and Behaviour
+            </Text>
+            {questions2
+              .slice((page - 1) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers2[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 2 && (
+          <View>
+            <Text style={styles.SectionHeader}>Section C: Life Skills</Text>
+            {questions3
+              .slice((page - 2) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers3[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 3 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section D: Child’s Self-Concept
+            </Text>
+            {questions4
+              .slice((page - 3) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers4[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 4 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section E: Social Activities
+            </Text>
+            {questions5
+              .slice((page - 4) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers5[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        {page === 5 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section F: Risky Activities
+            </Text>
+            {questions6
+              .slice((page - 5) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers6[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        <View style={styles.navigationContainerwithProgressBar}>
+          <View style={styles.navigationContainer}>
+            {page !== 0 && page !== 6 && (
+              <TouchableOpacity style={styles.button} onPress={handlePrev}>
+                <Text style={styles.buttonText}>Previous</Text>
+              </TouchableOpacity>
+            )}
+            {page !== 5 && page !== 6 && (
+              <TouchableOpacity
+                style={[styles.button, styles.rightButton]}
+                onPress={handleNext}
+              >
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            )}
 
-          {page === 5 && (
-            <TouchableOpacity
-              style={[
-                styles.navigationButton,
-                !canSubmit && styles.disabledButton,
-              ]}
-              onPress={() => handleSubmit(patientInfo)}
-              disabled={!canSubmit}
-            >
-              <Text style={styles.navigationButtonText}>Submit</Text>
-            </TouchableOpacity>
-          )}
+            {page === 5 && (
+              <TouchableOpacity
+                style={[styles.button, !canSubmit && styles.disabledButton]}
+                onPress={handleSubmit}
+                disabled={!canSubmit}
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
-          {page === 6 && (
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>
-                Your score1 is: {calculateScore1()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score2 is: {calculateScore2()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score3 is: {calculateScore3()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score4 is: {calculateScore4()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score5 is: {calculateScore5()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score6 is: {calculateScore6()}
-              </Text>
-            </View>
-          )}
+          <ProgressBar
+            style={{ backgroundColor: "white" }}
+            progress={progress}
+            width={null}
+          />
         </View>
       </ScrollView>
     );
@@ -1154,15 +1236,26 @@ const WFIRSQuizScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 30,
+    backgroundColor: "#fff",
+  },
+  cardContainer: {
+    padding: 15,
   },
   questionContainer: {
     marginBottom: 16,
   },
+  SectionHeader: {
+    fontSize: 22,
+    fontWeight: "bold",
+    paddingBottom: 15,
+    fontFamily: "Open Sans",
+  },
   questionText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 8,
+    fontFamily: "Open Sans",
   },
   optionContainer: {
     flexDirection: "row",
@@ -1172,11 +1265,16 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 14,
     marginLeft: 8,
+    fontWeight: "300",
+    fontFamily: "Open Sans",
   },
-  buttonContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
+    paddingBottom: 20,
+  },
+  navigationContainerwithProgressBar: {
     paddingBottom: 100,
   },
   button: {
@@ -1184,7 +1282,37 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   navigationButtonText: {
-    paddingBottom: 30,
+    paddingBottom: 50,
+  },
+  navigationButton: {
+    paddingBottom: 50,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+    fontFamily: "Open Sans",
+  },
+  button: {
+    flexDirection: "row",
+    width: "30%",
+    backgroundColor: green,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#BFDCE5",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Open Sans",
+  },
+  disabledButton: {
+    backgroundColor: "#D3D3D3", // change the background color for disabled button
+    borderColor: "#D3D3D3", // change the border color for disabled button
   },
 });
 export default WFIRSQuizScreen;

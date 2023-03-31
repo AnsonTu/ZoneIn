@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { darkGreen, green } from "../../components/Constants";
+import { darkGreen } from "../../components/Constants";
 
-const CompletedAssessments = () => {
+const ViewReport = () => {
   const [tab, setTab] = useState("completed");
   const [selectedValue, setSelectedValue] = useState(null);
 
   const assessments = [
-    { name: "Assessment 1" },
-    { name: "Assessment 2" },
-    { name: "Assessment 3" },
-    { name: "Assessment 4" },
-    { name: "Assessment 5" },
+    { name: "Report 1" },
+    { name: "Report 2" },
+    { name: "Report 3" },
+    { name: "Report 4" },
+    { name: "Report 5" },
   ];
 
   const patients = [
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CompletedAssessments;
+export default ViewReport;

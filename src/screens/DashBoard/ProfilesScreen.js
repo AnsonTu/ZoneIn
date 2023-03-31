@@ -13,7 +13,9 @@ import { auth } from "../../../firebaseConfig";
 import { getUserInfo, updateUserInfo } from "../../helpers/query";
 import * as ImagePicker from "expo-image-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-
+import Btn from "../../components/Btn";
+import { darkGreen } from "../../components/Constants";
+import Field from "../../components/Field";
 const ProfilesScreen = () => {
   const [documentId, setDocumentId] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -91,13 +93,10 @@ const ProfilesScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <View style={styles.profileImageContainer}>
-          {profileImage ? (
-            <Image style={styles.profileImage} source={{ uri: profileImage }} />
-          ) : (
-            <Text>{`${firstName} ${lastName}`}</Text>
-          )}
-        </View>
+        <Text
+          style={styles.profileNameContainer}
+        >{`${firstName} ${lastName}`}</Text>
+
         <Text style={styles.label}>First Name</Text>
         {editMode ? (
           <TextInput
@@ -146,7 +145,7 @@ const ProfilesScreen = () => {
 
         <Text style={styles.label}>Date of Birth </Text>
         {editMode ? (
-          <>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <TouchableOpacity onPress={() => setIsDateModalVisible(true)}>
               <Text
                 style={{
@@ -156,6 +155,7 @@ const ProfilesScreen = () => {
                   paddingHorizontal: 20,
                   marginBottom: 12,
                   borderRadius: 25,
+                  marginRight: 10,
                 }}
               >
                 {DOB.toISOString().split("T")[0]}
@@ -164,7 +164,7 @@ const ProfilesScreen = () => {
             {isDateModalVisible && (
               <RNDateTimePicker value={DOB} onChange={onDateChange} />
             )}
-          </>
+          </View>
         ) : (
           <Text style={styles.text}>{DOB.toISOString().split("T")[0]}</Text>
         )}
@@ -182,33 +182,40 @@ const ProfilesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    height: "100%",
   },
-  profileImageContainer: {
+  profileNameContainer: {
     alignItems: "center",
     marginBottom: 20,
+    fontSize: 24,
+    paddingHorizontal: "20%",
+    fontWeight: "bold",
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
+
   label: {
     fontWeight: "bold",
     marginTop: 20,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "gray",
-    padding: 10,
-    marginTop: 10,
+    fontSize: 18,
+    borderRadius: 10,
+    color: darkGreen,
+    paddingHorizontal: 20,
+    height: "10%",
+    width: "90%",
+    backgroundColor: "rgb(220,220, 220)",
+    marginVertical: 10,
   },
   text: {
-    marginTop: 10,
-    height: 40,
-    width: "70%",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    fontSize: 18,
+    paddingTop: 20,
+    borderRadius: 20,
+    color: darkGreen,
+    paddingHorizontal: 20,
+    height: "10%",
+    width: "90%",
+    backgroundColor: "rgb(220,220, 220)",
+    marginVertical: 10,
   },
   button: {
     height: 40,

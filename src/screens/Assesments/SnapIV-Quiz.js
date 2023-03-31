@@ -6,10 +6,11 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import { RadioButton } from "react-native-paper";
+import { RadioButton, Card } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
 import { addPatientAssessment } from "../../helpers/query";
-
+import ProgressBar from "react-native-progress/Bar";
+import { darkGreen, green } from "../../components/Constants";
 const questions1 = [
   {
     id: 1,
@@ -309,11 +310,22 @@ const SNAPQuizScreen = (props) => {
   const { patientInfo } = props.route.params;
 
   const [page, setPage] = useState(0);
+  let [Score1, setScore1] = useState(0);
+  let [Score2, setScore2] = useState(0);
+  let [Score3, setScore3] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
   const [answers3, setAnswers3] = useState(Array(questions3.length).fill(null));
   const [termsAgreed, setTermsAgreed] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
+
+  const totalQuestions =
+    questions1.length + questions2.length + questions3.length;
+  const answeredQuestions =
+    answers1.filter((answer) => answer !== null).length +
+    answers2.filter((answer) => answer !== null).length +
+    answers3.filter((answer) => answer !== null).length;
+  const progress = answeredQuestions / totalQuestions;
 
   const handleNext = () => {
     setPage(page + 1);
@@ -340,7 +352,6 @@ const SNAPQuizScreen = (props) => {
   };
 
   const calculateScore1 = () => {
-    let Score1 = 0;
     for (let i = 0; i < answers1.length; i++) {
       const answerIndex = answers1[i];
       if (answerIndex !== null) {
@@ -348,7 +359,7 @@ const SNAPQuizScreen = (props) => {
         Score1 += selectedOption1.score;
       }
     }
-
+    setScore1(Score1);
     if (Score1 < 13) {
       return "Symptoms not clinically significant";
     } else if (Score1 < 18) {
@@ -361,7 +372,6 @@ const SNAPQuizScreen = (props) => {
   };
 
   const calculateScore2 = () => {
-    let Score2 = 0;
     for (let i = 0; i < answers2.length; i++) {
       const answerIndex2 = answers2[i];
       if (answerIndex2 !== null) {
@@ -369,6 +379,7 @@ const SNAPQuizScreen = (props) => {
         Score2 += selectedOption2.score;
       }
     }
+    setScore2(Score2);
     if (Score2 < 8) {
       return "Symptoms not clinically significant";
     } else if (Score2 < 14) {
@@ -381,7 +392,6 @@ const SNAPQuizScreen = (props) => {
   };
 
   const calculateScore3 = () => {
-    let Score3 = 0;
     for (let i = 0; i < answers3.length; i++) {
       const answerIndex = answers3[i];
       if (answerIndex !== null) {
@@ -389,7 +399,7 @@ const SNAPQuizScreen = (props) => {
         Score3 += selectedOption3.score;
       }
     }
-
+    setScore3(Score3);
     if (Score3 > 8) {
       return "ODD present";
     } else {
@@ -399,6 +409,32 @@ const SNAPQuizScreen = (props) => {
 
   const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
+    const scores = [
+      {
+        title: "Inattention Subset",
+        score: Score1,
+        maxScore: 27,
+        diagnosis: calculateScore1(),
+        id: 1,
+      },
+      {
+        title: "Hyperactivity/Impulsivity Subset",
+        score: Score2,
+        maxScore: 27,
+        diagnosis: calculateScore2(),
+        id: 2,
+      },
+      {
+        title: "ODD (Oppositional Defiant Disorder) Subset",
+        score: Score3,
+        maxScore: 24,
+        diagnosis: calculateScore3(),
+        id: 3,
+      },
+    ];
+
+    console.log("this is scote 3:" + Score3);
+    props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
       patientInfo,
       "SNAPIV",
@@ -423,108 +459,122 @@ const SNAPQuizScreen = (props) => {
   } else if (!quizStarted) {
     return (
       <ScrollView style={styles.container}>
-        {page === 0 &&
-          questions1.slice(page * 9, (page + 1) * 9).map((question, index) => (
-            <View key={question.id} style={styles.questionContainer}>
-              <Text style={styles.questionText}>{question.text}</Text>
-              {question.options.map((option, optionIndex) => (
-                <View key={optionIndex} style={styles.optionContainer}>
-                  <RadioButton
-                    value={optionIndex}
-                    status={
-                      answers1[index] === optionIndex ? "checked" : "unchecked"
-                    }
-                    onPress={() => handleAnswer(index, optionIndex)}
-                  />
-                  <Text style={styles.optionText}>{option.text}</Text>
+        {page === 0 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section A: Inattention Subset
+            </Text>
+            {questions1
+              .slice(page * 9, (page + 1) * 9)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers1[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
                 </View>
               ))}
-            </View>
-          ))}
-        {page === 1 &&
-          questions2.slice((page - 1) * 9, page * 9).map((question, index) => (
-            <View key={question.id} style={styles.questionContainer}>
-              <Text style={styles.questionText}>{question.text}</Text>
-              {question.options.map((option, optionIndex) => (
-                <View key={optionIndex} style={styles.optionContainer}>
-                  <RadioButton
-                    value={optionIndex}
-                    status={
-                      answers2[index] === optionIndex ? "checked" : "unchecked"
-                    }
-                    onPress={() => handleAnswer(index, optionIndex)}
-                  />
-                  <Text style={styles.optionText}>{option.text}</Text>
+          </View>
+        )}
+
+        {page === 1 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section B: Hyperactivity/Impulsivity Subset
+            </Text>
+            {questions2
+              .slice((page - 1) * 9, page * 9)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers2[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
                 </View>
               ))}
-            </View>
-          ))}
-        {page === 2 &&
-          questions3
-            .slice((page - 2) * 10, page * 10)
-            .map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionText}>{question.text}</Text>
-                {question.options.map((option, optionIndex) => (
-                  <View key={optionIndex} style={styles.optionContainer}>
-                    <RadioButton
-                      value={optionIndex}
-                      status={
-                        answers3[index] === optionIndex
-                          ? "checked"
-                          : "unchecked"
-                      }
-                      onPress={() => handleAnswer(index, optionIndex)}
-                    />
-                    <Text style={styles.optionText}>{option.text}</Text>
-                  </View>
-                ))}
-              </View>
-            ))}
-        <View style={styles.navigationContainer}>
-          {page !== 0 && page !== 3 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handlePrev}
-            >
-              <Text style={styles.navigationButtonText}>Previous</Text>
-            </TouchableOpacity>
-          )}
-          {page !== 2 && page !== 3 && (
-            <TouchableOpacity
-              style={styles.navigationButton}
-              onPress={handleNext}
-            >
-              <Text style={{ paddingBottom: 100 }}>Next</Text>
-            </TouchableOpacity>
-          )}
+          </View>
+        )}
 
-          {page === 2 && (
-            <TouchableOpacity
-              style={[
-                styles.navigationButton,
-                !canSubmit && styles.disabledButton,
-              ]}
-              onPress={() => handleSubmit(patientInfo)}
-              disabled={!canSubmit}
-            >
-              <Text style={styles.navigationButtonText}>Submit</Text>
-            </TouchableOpacity>
-          )}
-
-          {page === 3 && (
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>
-                Your score1 is: {calculateScore1()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score2 is: {calculateScore2()}
-              </Text>
-              <Text style={styles.scoreText}>
-                Your score3 is: {calculateScore3()}
-              </Text>
-            </View>
-          )}
+        {page === 2 && (
+          <View>
+            <Text style={styles.SectionHeader}>
+              Section C: ODD (Oppositional Defiant Disorder) Subset
+            </Text>
+            {questions3
+              .slice((page - 2) * 10, page * 10)
+              .map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>{question.text}</Text>
+                  {question.options.map((option, optionIndex) => (
+                    <View key={optionIndex} style={styles.optionContainer}>
+                      <RadioButton
+                        value={optionIndex}
+                        status={
+                          answers3[index] === optionIndex
+                            ? "checked"
+                            : "unchecked"
+                        }
+                        onPress={() => handleAnswer(index, optionIndex)}
+                      />
+                      <Text style={styles.optionText}>{option.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+          </View>
+        )}
+        <View style={styles.navigationContainerwithProgressBar}>
+          <View style={styles.navigationContainer}>
+            {page !== 0 && page !== 3 && (
+              <TouchableOpacity style={styles.button} onPress={handlePrev}>
+                <Text style={styles.buttonText}>Previous</Text>
+              </TouchableOpacity>
+            )}
+            {page !== 2 && page !== 3 && (
+              <TouchableOpacity
+                style={[styles.button, styles.rightButton]}
+                onPress={handleNext}
+              >
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            )}
+            {page === 2 && (
+              <TouchableOpacity
+                style={[styles.button, !canSubmit && styles.disabledButton]}
+                onPress={() => handleSubmit(patientInfo)}
+                disabled={!canSubmit}
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <ProgressBar
+            style={{ backgroundColor: "white", color: green }}
+            progress={progress}
+            width={null}
+          />
         </View>
       </ScrollView>
     );
@@ -534,14 +584,23 @@ const SNAPQuizScreen = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 30,
+    backgroundColor: "#fff",
+  },
+  cardContainer: {
+    padding: 15,
   },
   questionContainer: {
     marginBottom: 16,
   },
+  SectionHeader: {
+    fontSize: 22,
+    fontWeight: "bold",
+    paddingBottom: 15,
+  },
   questionText: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 8,
   },
   optionContainer: {
@@ -552,11 +611,15 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 14,
     marginLeft: 8,
+    fontWeight: "300",
   },
-  buttonContainer: {
+  navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 16,
+    paddingBottom: 20,
+  },
+  navigationContainerwithProgressBar: {
     paddingBottom: 100,
   },
   button: {
@@ -564,7 +627,35 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   navigationButtonText: {
-    paddingBottom: 30,
+    paddingBottom: 50,
+  },
+  navigationButton: {
+    paddingBottom: 50,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+  },
+  button: {
+    flexDirection: "row",
+    width: "30%",
+    backgroundColor: green,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#BFDCE5",
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  disabledButton: {
+    backgroundColor: "#D3D3D3", // change the background color for disabled button
+    borderColor: "#D3D3D3", // change the border color for disabled button
   },
 });
 export default SNAPQuizScreen;

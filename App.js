@@ -13,19 +13,22 @@ import ResetPassword from "./src/screens/Authentication/ResetPassword";
 
 import Patient_Info_Profile from "./src/screens/Profiles/Patient-Info-Profile";
 import PatientProfilesList from "./src/screens/Profiles/PatientProfilesList";
-import ReportsPage from "./src/screens/Reports/ReportsPage";
-import DocumentUploadPage from "./src/screens/Reports/UploadReport";
-import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
 
+import ReportsPage from "./src/screens/Reports/ReportsPage";
+
+import CompletedAssesments from "./src/screens/Reports/CompletedAssesments";
+import CreateReport from "./src/screens/Reports/createReport";
+import ViewReport from "./src/screens/Reports/ViewReport";
+
+import WSRQuizScreen from "./src/screens/Assesments/WSR-II";
+import TAFQuizScreen from "./src/screens/Assesments/TAF";
 import AssessmentsPage from "./src/screens/Assesments/AssessmentsPage";
+import SNAPQuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
+import WFIRSQuizScreen from "./src/screens/Assesments/WFIRS";
+import TermsScreen from "./src/screens/Assesments/TermsScreen";
+import ResultsPage from "./src/screens/Assesments/ResultsPage";
 
 import MainNavContainer from "./src/navigation/MainNavContainer";
-
-import TAFQuizScreen from "./src/screens/Assesments/TAF";
-import WFIRSQuizScreen from "./src/screens/Assesments/WFIRS";
-import QuizScreen from "./src/screens/Assesments/SnapIV-Quiz";
-import TermsScreen from "./src/screens/Assesments/TermsScreen";
-import CreateReport from "./src/screens/Reports/createReport";
 const Stack = createNativeStackNavigator();
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -59,40 +62,93 @@ function App() {
               component={StartScreen}
               screenOptions={{ headerShown: false }}
             />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Signup" component={Signup} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ title: "Login Page" }}
+            />
+            <Stack.Screen
+              name="Signup"
+              component={Signup}
+              options={{ title: "Signup Page" }}
+            />
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPassword}
+              options={{ title: "Reset Password" }}
+            />
           </>
         ) : (
           <>
             <Stack.Screen
               name="MainNavContainer"
               component={MainNavContainer}
+              options={{ title: "Dashboard" }}
             />
             <Stack.Screen name="Dashboard" component={Dashboard} />
             <Stack.Screen
               name="PatientProfilesList"
               component={PatientProfilesList}
+              options={{ title: "Patients List" }}
             />
             <Stack.Screen
               name="Patient_Info_Profile"
               component={Patient_Info_Profile}
+              options={{ title: "Patient Profile" }}
             />
-            <Stack.Screen name="ReportsPage" component={ReportsPage} />
             <Stack.Screen
-              name="DocumentUploadPage"
-              component={DocumentUploadPage}
+              name="ReportsPage"
+              component={ReportsPage}
+              options={{ title: "Reports List" }}
             />
-            <Stack.Screen name="AssessmentsPage" component={AssessmentsPage} />
+
+            <Stack.Screen
+              name="AssessmentsPage"
+              component={AssessmentsPage}
+              options={{ title: "Assesments List" }}
+            />
             <Stack.Screen
               name="CompletedAssesments"
               component={CompletedAssesments}
+              options={{ title: "Completed Assesments" }}
             />
             <Stack.Screen name="TermsScreen" component={TermsScreen} />
-            <Stack.Screen name="QuizScreen" component={QuizScreen} />
-            <Stack.Screen name="WFIRSQuizScreen" component={WFIRSQuizScreen} />
-            <Stack.Screen name="TAFQuizScreen" component={TAFQuizScreen} />
-            <Stack.Screen name="CreateReport" component={CreateReport} />
+            <Stack.Screen
+              name="SNAPQuizScreen"
+              component={SNAPQuizScreen}
+              options={{ title: "SNAP-IV 26 Assessment" }}
+            />
+            <Stack.Screen
+              name="WFIRSQuizScreen"
+              component={WFIRSQuizScreen}
+              options={{ title: "WFIRS-P Assessment" }}
+            />
+            <Stack.Screen
+              name="TAFQuizScreen"
+              component={TAFQuizScreen}
+              options={{ title: "TAF Assessment" }}
+            />
+            <Stack.Screen
+              name="WSRQuizScreen"
+              component={WSRQuizScreen}
+              options={{ title: "WSR-II Assessment" }}
+            />
+            <Stack.Screen
+              name="ResultsPage"
+              component={ResultsPage}
+              screenOptions={{ headerShown: false }}
+              options={{ title: "Results" }}
+            />
+            <Stack.Screen
+              name="CreateReport"
+              component={CreateReport}
+              options={{ title: "Create a Report" }}
+            />
+            <Stack.Screen
+              name="ViewReport"
+              component={ViewReport}
+              options={{ title: "View Reports" }}
+            />
           </>
         )}
       </Stack.Navigator>

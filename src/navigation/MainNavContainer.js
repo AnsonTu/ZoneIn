@@ -7,7 +7,7 @@ import { green } from "../components/Constants";
 import HomeScreen from "../screens/DashBoard/HomeScreen";
 import ProfilesScreen from "../screens/DashBoard/ProfilesScreen";
 import SettingsScreen from "../screens/DashBoard/SettingsScreen";
-import NotifyScreen from "../screens/DashBoard/NotifyScreen";
+
 //Screen names
 const homeName = "Home";
 
@@ -33,19 +33,6 @@ function MainNavContainer() {
         }}
       />
 
-      <Tab.Screen
-        name="Notificaitons"
-        component={NotifyScreen}
-        options={{
-          headerShown: false,
-
-          tabBarLabel: "Notifications",
-          tabBarActiveTintColor: "#006D77",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="ios-notifications-sharp" color={green} size={26} />
-          ),
-        }}
-      />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}

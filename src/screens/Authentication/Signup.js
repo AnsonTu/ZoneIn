@@ -25,59 +25,70 @@ const TermsAndConditions = () => {
         scrollEventThrottle={16}
         style={styles.scrollView}
       >
+        <Text style={styles.modalTextHeader}>Terms and Conditions</Text>
         <Text style={styles.modalText}>
-          Terms and Conditions Introduction This document constitutes a legally
-          binding agreement between you and [App Name], governing your use of
-          the [App Name] app and its services. By using the [App Name] app, you
-          agree to be bound by these terms and conditions. If you do not agree
-          to these terms and conditions, you must immediately stop using the
-          [App Name] app. Eligibility The [App Name] app is intended for use by
-          individuals who are at least 18 years of age. If you are under 18
-          years of age, you may use the [App Name] app only with the supervision
-          of a parent or legal guardian who agrees to be bound by these terms
-          and conditions. Services The [App Name] app provides a platform for
-          users to assess themselves and their children for ADHD, manage
-          treatment options such as therapy, and access advice from medical
-          professionals. The [App Name] app does not provide medical advice or
-          diagnosis. The information and services provided through the [App
-          Name] app are for informational purposes only and should not be used
-          as a substitute for professional medical advice, diagnosis, or
-          treatment. User Accounts In order to access the services provided by
-          the [App Name] app, you must create an account. You agree to provide
-          accurate and complete information when creating your account and to
-          keep this information up-to-date. You are responsible for maintaining
-          the confidentiality of your account and password and for restricting
-          access to your device. You agree to accept responsibility for all
-          activities that occur under your account or password. User Content The
-          [App Name] app may allow you to submit, upload, publish, or otherwise
-          make available content, including but not limited to text,
-          photographs, and videos (“User Content”). You retain all rights in
-          your User Content and are responsible for ensuring that your User
-          Content does not violate the intellectual property rights of any third
-          party. By making any User Content available through the [App Name]
-          app, you grant to [App Name] a non-exclusive, transferable,
+          {" "}
+          1. Introduction This document constitutes a legally binding agreement
+          between you and ZoneIn, governing your use of the ZoneIn app and its
+          services. By using the ZoneIn app, you agree to be bound by these
+          terms and conditions. If you do not agree to these terms and
+          conditions, you must immediately stop using the ZoneIn app.
+          Eligibility The ZoneIn app is intended for use by individuals who are
+          at least 18 years of age.{" "}
+        </Text>
+        <Text style={styles.modalText}>
+          2. If you are under 18 years of age, you may use the ZoneIn app only
+          with the supervision of a parent or legal guardian who agrees to be
+          bound by these terms and conditions. Services The ZoneIn app provides
+          a platform for users to assess themselves and their children for ADHD,
+          manage treatment options such as therapy, and access advice from
+          medical professionals. The ZoneIn app does not provide medical advice
+          or diagnosis.{" "}
+        </Text>
+        <Text style={styles.modalText}>
+          3. The information and services provided through the ZoneIn app are
+          for informational purposes only and should not be used as a substitute
+          for professional medical advice, diagnosis, or treatment. User
+          Accounts In order to access the services provided by the ZoneIn app,
+          you must create an account. You agree to provide accurate and complete
+          information when creating your account and to keep this information
+          up-to-date. You are responsible for maintaining the confidentiality of
+          your account and password and for restricting access to your device.
+          You agree to accept responsibility for all activities that occur under
+          your account or password.{" "}
+        </Text>
+        <Text style={styles.modalText}>
+          4. User Content The ZoneIn app may allow you to submit, upload,
+          publish, or otherwise make available content, including but not
+          limited to text, photographs, and videos (“User Content”). You retain
+          all rights in your User Content and are responsible for ensuring that
+          your User Content does not violate the intellectual property rights of
+          any third party. By making any User Content available through the
+          ZoneIn app, you grant to ZoneIn a non-exclusive, transferable,
           sub-licensable, royalty-free, worldwide license to use, copy, modify,
           create derivative works based on, distribute, publicly display,
           publicly perform, and otherwise exploit your User Content in
-          connection with the [App Name] app and [App Name]'s business.
-          Proprietary Rights The [App Name] app and its content, including but
-          not limited to software, text, graphics, and logos, are the
-          proprietary property of [App Name] and its licensors and are protected
-          by intellectual property laws. You may not use the [App Name] app or
-          its content for any commercial purpose without the express written
-          consent of [App Name]. Disclaimer of Warranties The [App Name] app and
-          its content are provided on an “as is” and “as available” basis. [App
-          Name] makes no representations or warranties of any kind, express or
-          implied, as to the operation of the [App Name] app or the accuracy,
-          completeness, or reliability of its content. You expressly agree that
-          your use of the [App Name] app is at your sole risk. Limitation of
-          Liability In no event shall [App Name] be liable for any damages of
-          any kind arising from the use of the [App Name] app, including but not
-          limited to direct, indirect, incidental, punitive, and consequential
-          damages. Indemnification You agree to indemnify and hold [App Name]
-          and its officers, directors, employees, agents, licensors, and
-          suppliers harmless from and against any claims, actions, demands,
-          losses,
+          connection with the ZoneIn app and ZoneIn's business. Proprietary
+          Rights The ZoneIn app and its content, including but not limited to
+          software, text, graphics, and logos, are the proprietary property of
+          ZoneIn and its licensors and are protected by intellectual property
+          laws.{" "}
+        </Text>
+        <Text style={styles.modalText}>
+          5. You may not use the ZoneIn app or its content for any commercial
+          purpose without the express written consent of ZoneIn. Disclaimer of
+          Warranties The ZoneIn app and its content are provided on an “as is”
+          and “as available” basis. [App Name] makes no representations or
+          warranties of any kind, express or implied, as to the operation of the
+          ZoneIn app or the accuracy, completeness, or reliability of its
+          content. You expressly agree that your use of the ZoneIn app is at
+          your sole risk. Limitation of Liability In no event shall ZoneIn be
+          liable for any damages of any kind arising from the use of the ZoneIn
+          app, including but not limited to direct, indirect, incidental,
+          punitive, and consequential damages. Indemnification You agree to
+          indemnify and hold ZoneIn and its officers, directors, employees,
+          agents, licensors, and suppliers harmless from and against any claims,
+          actions, demands, losses,
         </Text>
       </ScrollView>
     </View>
@@ -175,26 +186,37 @@ const Signup = (props) => {
             onChangeText={onPhoneNumberChange}
           />
 
-          <Text style={{ color: darkGreen, fontSize: 16 }}>
-            Set Date of Birth
-          </Text>
-          <TouchableOpacity onPress={() => setIsDateModalVisible(true)}>
-            <Text
-              style={{
-                backgroundColor: "rgb(220, 220, 220)",
-                fontSize: 16,
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                marginBottom: 12,
-                borderRadius: 25,
-              }}
-            >
-              {dateOfBirth.toISOString().split("T")[0]}
-            </Text>
-          </TouchableOpacity>
-          {isDateModalVisible && (
-            <RNDateTimePicker value={dateOfBirth} onChange={onDateChange} />
-          )}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 12,
+              borderRadius: 10,
+              color: darkGreen,
+              paddingHorizontal: 20,
+              height: "5%",
+              width: "78%",
+              backgroundColor: "rgb(220,220, 220)",
+              marginVertical: 10,
+            }}
+          >
+            <TouchableOpacity onPress={() => setIsDateModalVisible(true)}>
+              <Text
+                style={{
+                  backgroundColor: "rgb(220, 220, 220)",
+                  fontSize: 16,
+
+                  color: darkGreen,
+                  borderRadius: 25,
+                }}
+              >
+                DOB: {dateOfBirth.toISOString().split("T")[0]}
+              </Text>
+            </TouchableOpacity>
+            {isDateModalVisible && (
+              <RNDateTimePicker value={dateOfBirth} onChange={onDateChange} />
+            )}
+          </View>
 
           <SelectDropdown
             data={roles}
@@ -212,10 +234,17 @@ const Signup = (props) => {
               // if data array is an array of objects then return item.property to represent item in dropdown
               return item;
             }}
-            dropdownIconPosition={"right"}
+            dropdownIconPosition={"left"}
             dropdownStyle={styles.dropdown4DropdownStyle}
             rowStyle={styles.dropdown4RowStyle}
             rowTextStyle={styles.dropdown4RowTxtStyle}
+            buttonStyle={styles.dropdown4RowButtonStyle}
+            defaultButtonText={"Select an Option"}
+            buttonTextStyle={{
+              ...styles.dropdownButtonTextStyle,
+              textAlign: "left",
+              color: darkGreen, // add this line
+            }}
           />
 
           <Field
@@ -267,9 +296,15 @@ const Signup = (props) => {
             </TouchableOpacity>
 
             <Modal
-              style={{ alignItems: "center", padding: 150 }}
+              style={{
+                alignItems: "center",
+                padding: 150,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 5,
+              }}
               animationType="slide"
-              transparent={false}
+              transparent={true}
               visible={isModalVisible}
               onRequestClose={() => setModalVisible(false)}
             >
@@ -278,7 +313,7 @@ const Signup = (props) => {
                 style={styles.closeModalBtn}
                 onPress={() => setModalVisible(false)}
               >
-                <Ionicons name="ios-close-circle" size={40} color="green" />
+                <Ionicons name="ios-close-circle" size={50} color="#006D77" />
               </TouchableOpacity>
             </Modal>
           </View>
@@ -333,28 +368,50 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "40%",
-    paddingBottom: "40%",
+    paddingTop: "35%",
+    paddingBottom: "20%",
     paddingHorizontal: "2%",
     width: "100%",
-    height: "50%",
+    height: "70%",
   },
   scrollView: {
-    backgroundColor: "gray",
+    backgroundColor: "white",
     marginHorizontal: 20,
     borderColor: "black",
     borderWidth: 2,
     borderRadius: 10,
   },
+  modalTextHeader: {
+    textAlign: "left",
+    fontSize: 20,
+    padding: 10,
+    paddingBottom: 20,
+    fontFamily: "Open Sans",
+    fontWeight: "500",
+  },
   modalText: {
-    textAlign: "center",
+    textAlign: "left",
     fontSize: 16,
     padding: 10,
+    paddingBottom: 20,
+    fontFamily: "Open Sans",
+    fontWeight: "300",
   },
   closeModalBtn: {
     position: "absolute",
     top: "10%",
     right: 10,
+  },
+  dropdown4RowButtonStyle: {
+    borderRadius: 10,
+    color: darkGreen,
+    height: "5%",
+    width: "78%",
+
+    backgroundColor: "rgb(220,220, 220)",
+  },
+  DobContainer: {
+    flexDirection: "column",
   },
 });
 

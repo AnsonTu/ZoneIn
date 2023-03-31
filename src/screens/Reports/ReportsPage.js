@@ -24,19 +24,13 @@ const ReportsPage = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="View Reports"
-        Press={() => props.navigation.navigate("Dashboard")}
+        Press={() => props.navigation.navigate("ViewReport")}
       />
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="Create Report"
-        Press={() => props.navigation.navigate("Dashboard")}
-      />
-      <HeaderBlock
-        textColor="white"
-        bgColor={darkGreen}
-        btnLabel="Upload Report"
-        Press={() => props.navigation.navigate("DocumentUploadPage")}
+        Press={() => props.navigation.navigate("CreateReport")}
       />
     </View>
   );

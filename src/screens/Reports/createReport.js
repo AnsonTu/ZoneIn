@@ -1,15 +1,23 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import SelectDropdown from "react-native-select-dropdown";
-import Picker from "react-native-picker-select";
-import { darkGreen } from "../../components/Constants";
+import RNPickerSelect from "react-native-picker-select";
+import { darkGreen, green } from "../../components/Constants";
 
 const CreateReport = () => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [question1, setQuestion1] = useState("");
   const [question2, setQuestion2] = useState("");
+  const [question3, setQuestion3] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
 
   const onValueChange = (value) => {
@@ -31,6 +39,9 @@ const CreateReport = () => {
   const onQuestion2Change = (question2) => {
     setQuestion2(question2);
   };
+  const onQuestion3Change = (question2) => {
+    setQuestion3(question3);
+  };
   const handleDateChange = (_, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -38,98 +49,163 @@ const CreateReport = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-        padding: 30,
-        paddingTop: 50,
-      }}
-    >
-      <Picker
-        style={{
-          borderRadius: 100,
-          color: darkGreen,
-          paddingHorizontal: 20,
-          height: "35%",
-          width: "78%",
-          backgroundColor: "rgb(220,220, 220)",
-          marginVertical: 10,
-        }}
-        items={patients}
-        placeholder={{ label: "Select Patient", value: null, color: "red" }}
-        onValueChange={onValueChange}
-        value={selectedValue}
-      />
+    <View style={styles.container}>
+      <ScrollView>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            padding: 30,
+            paddingTop: 50,
+          }}
+        >
+          <View
+            style={{
+              padding: 10,
+              borderColor: "black",
+              borderWidth: 1,
+              width: 150,
+            }}
+          >
+            <RNPickerSelect
+              style={{ color: "black" }}
+              items={patients}
+              placeholder={{ label: "Select Patient", value: null }}
+              onValueChange={onValueChange}
+              value={selectedValue}
+            />
+          </View>
+          <Text
+            style={{
+              marginTop: 20,
+              fontSize: 18,
+              fontWeight: "500",
+              marginBottom: 8,
+            }}
+          >
+            Date:
+          </Text>
 
-      <Text>Date:</Text>
-
-      {
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      }
-      <Text>Question 1:</Text>
-      <TextInput
-        multiline
-        numberOfLines={4}
-        value={question1}
-        onChangeText={onQuestion1Change}
-        style={{
-          width: "100%",
-          height: "15%",
-          borderColor: "gray",
-          borderWidth: 2,
-        }}
-      />
-      <Text>Question 2:</Text>
-      <TextInput
-        multiline
-        numberOfLines={4}
-        value={question2}
-        onChangeText={onQuestion2Change}
-        style={{
-          width: "100%",
-          height: "15%",
-          borderColor: "gray",
-          borderWidth: 2,
-        }}
-      />
-      <Button title="Submit" onPress={handleFormSubmit} />
+          {
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          }
+          <View style={styles.questionContainer}>
+            <Text style={styles.questionText}>
+              Question 1: What was the setting/environment the child was in?
+            </Text>
+            <TextInput
+              multiline
+              numberOfLines={10}
+              value={question1}
+              onChangeText={onQuestion1Change}
+              style={styles.textInput}
+            />
+            <Text style={styles.questionText}>
+              Question 2: What did the child do?
+            </Text>
+            <TextInput
+              multiline
+              numberOfLines={10}
+              value={question2}
+              onChangeText={onQuestion2Change}
+              style={styles.textInput}
+            />
+            <Text style={styles.questionText}>
+              Question 3: What was the impact of the child’s actions?
+            </Text>
+            <TextInput
+              multiline
+              numberOfLines={10}
+              value={question3}
+              onChangeText={onQuestion3Change}
+              style={styles.textInput}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleFormSubmit}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingTop: "40%",
-    paddingBottom: "40%",
-    paddingHorizontal: "2%",
-    width: "100%",
-    height: "50%",
   },
-  scrollView: {
-    backgroundColor: "gray",
-    marginHorizontal: 20,
-    borderColor: "black",
-    borderWidth: 2,
-    borderRadius: 10,
-  },
-  modalText: {
-    textAlign: "center",
-    fontSize: 16,
+  textInput: {
+    borderWidth: 0, // remove border to avoid overlapping with box
+    borderRadius: 5,
     padding: 10,
+    marginTop: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    // add width and height to create a box
+    width: 330,
+    height: 100,
+    paddingBottom: 20,
   },
-  closeModalBtn: {
-    position: "absolute",
-    top: "10%",
-    right: 10,
+
+  questionText: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 8,
+    marginTop: 10,
+  },
+
+  navigationContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    paddingBottom: 100,
+  },
+
+  questionContainer: {
+    marginTop: 18,
+  },
+  navigationButtonText: {
+    paddingBottom: 50,
+  },
+  navigationButton: {
+    paddingBottom: 50,
+  },
+  rightButton: {
+    marginRight: 8,
+    marginLeft: "auto",
+  },
+  button: {
+    marginHorizontal: "35%",
+    display: "flex",
+    width: "50%",
+    backgroundColor: green,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "black",
+    padding: 10,
+
+    marginTop: 20,
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonText: {
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
