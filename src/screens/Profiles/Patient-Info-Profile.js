@@ -183,6 +183,18 @@ const Patient_Info_Profile = (props) => {
           </View>
         </View>
       </Modal>
+      <TouchableOpacity
+        style={styles.assessTile}
+        onPress={() => props.navigation.navigate("CompletedAssesments")}
+      >
+        <Text style={styles.assessTileText}>Assessments</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.assessTile}
+        onPress={() => props.navigation.navigate("ViewReport")}
+      >
+        <Text style={styles.assessTileText}>Reports</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -192,6 +204,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     width: "95%",
+  },
+  assessTile: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 15,
+    width: "95%",
+    height: "8%",
+
+    marginVertical: 10,
+    backgroundColor: green,
+    marginLeft: 15,
+    marginTop: 15,
+    borderRadius: 5,
+  },
+  assessTileText: {
+    fontWeight: "400",
+    padding: 20,
+    fontSize: 20,
   },
   patientTile: {
     flexDirection: "row",

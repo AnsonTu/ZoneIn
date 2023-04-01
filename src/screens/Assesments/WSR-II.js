@@ -1917,62 +1917,70 @@ const WSRQuizScreen = (props) => {
 
   const handleSubmit = async () => {
     setPage(page + 1);
+    const diagnosis1 = calculateScore1();
+    const diagnosis2 = calculateScore2();
+    const diagnosis20 = calculateScore20();
+    const diagnosis3 = calculateScore3();
+    const diagnosis16 = calculateScore16();
+    const diagnosis8 = calculateScore8();
+    const diagnosis9 = calculateScore9();
+    const diagnosis19 = calculateScore19();
 
     const scores = [
       {
         title: "Attention",
         score: score1,
         maxScore: 9,
-        diagnosis: calculateScore1(),
+        diagnosis: diagnosis1,
         id: 1,
       },
       {
         title: "Hyperactivity and Impulsivity",
         score: score2,
         maxScore: 9,
-        diagnosis: calculateScore2(),
+        diagnosis: diagnosis2,
         id: 2,
       },
       {
         title: "ADHD-Combined",
         score: score20,
         maxScore: 18,
-        diagnosis: calculateScore20(),
+        diagnosis: diagnosis20,
         id: 3,
       },
       {
         title: "ODD (Oppositional Defiant Disorder)",
         score: score3,
         maxScore: 8,
-        diagnosis: calculateScore3(),
+        diagnosis: diagnosis3,
         id: 4,
       },
       {
         title: "Conduct Disorder",
         score: score16,
         maxScore: 11,
-        diagnosis: calculateScore16(),
+        diagnosis: diagnosis16,
         id: 5,
       },
       {
         title: "Depressive Disorder",
         score: score8,
         maxScore: 11,
-        diagnosis: calculateScore8(),
+        diagnosis: diagnosis8,
         id: 6,
       },
       {
         title: "Manic Depression",
         score: score9,
         maxScore: 7,
-        diagnosis: calculateScore9(),
+        diagnosis: diagnosis9,
         id: 7,
       },
       {
         title: "Borderline Personality Disorder",
         score: score19,
         maxScore: 11,
-        diagnosis: calculateScore19(),
+        diagnosis: diagnosis19,
         id: 8,
       },
     ];

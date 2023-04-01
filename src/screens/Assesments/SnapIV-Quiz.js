@@ -409,31 +409,35 @@ const SNAPQuizScreen = (props) => {
 
   const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
+    const diagnosis1 = calculateScore1();
+    const diagnosis2 = calculateScore2();
+    const diagnosis3 = calculateScore3();
+
     const scores = [
       {
         title: "Inattention Subset",
-        score: Score1,
         maxScore: 27,
-        diagnosis: calculateScore1(),
+        diagnosis: diagnosis1,
+        score: Score1,
         id: 1,
       },
       {
         title: "Hyperactivity/Impulsivity Subset",
-        score: Score2,
         maxScore: 27,
-        diagnosis: calculateScore2(),
+        diagnosis: diagnosis2,
+        score: Score2,
         id: 2,
       },
       {
         title: "ODD (Oppositional Defiant Disorder) Subset",
-        score: Score3,
         maxScore: 24,
-        diagnosis: calculateScore3(),
+        diagnosis: diagnosis3,
+        score: Score3,
         id: 3,
       },
     ];
 
-    console.log("this is scote 3:" + Score3);
+    console.log("this is score 3:" + Score3);
     props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
       patientInfo,

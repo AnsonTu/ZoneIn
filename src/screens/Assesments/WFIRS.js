@@ -944,47 +944,59 @@ const WFIRSQuizScreen = (props) => {
 
   const handleSubmit = async () => {
     setPage(page + 1);
+    const diagnosis1 = calculateScore1();
+    const diagnosis2 = calculateScore2();
+    const diagnosis3 = calculateScore3();
+    const diagnosis4 = calculateScore4();
+    const diagnosis5 = calculateScore5();
+    const diagnosis6 = calculateScore6();
+
     const scores = [
       {
         title: "Inattention Subset",
-        score: Score1,
         maxScore: 27,
-        diagnosis: calculateScore1(),
+        diagnosis: diagnosis1,
+        score: Score1,
+
         id: 1,
       },
       {
         title: "Hyperactivity/Impulsivity Subset",
-        score: Score2,
         maxScore: 27,
-        diagnosis: calculateScore2(),
+        diagnosis: diagnosis2,
+        score: Score2,
         id: 2,
       },
       {
         title: "ODD (Oppositional Defiant Disorder) Subset",
-        score: Score3,
         maxScore: 24,
-        diagnosis: calculateScore3(),
+        diagnosis: diagnosis3,
+        score: Score3,
+
         id: 3,
       },
       {
         title: "Inattention Subset",
-        score: Score4,
         maxScore: 27,
-        diagnosis: calculateScore4(),
+        diagnosis: diagnosis4,
+        score: Score4,
+
         id: 1,
       },
       {
         title: "Hyperactivity/Impulsivity Subset",
-        score: Score5,
         maxScore: 27,
-        diagnosis: calculateScore5(),
+        diagnosis: diagnosis5,
+        score: Score5,
+
         id: 2,
       },
       {
         title: "ODD (Oppositional Defiant Disorder) Subset",
-        score: Score6,
         maxScore: 24,
-        diagnosis: calculateScore6(),
+        diagnosis: diagnosis6,
+        score: Score6,
+
         id: 3,
       },
     ];

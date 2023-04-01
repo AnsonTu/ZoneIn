@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Alert } from "react-native";
-import HeaderBlock from "../../components/HeaderBlock";
+
+import HeaderBlock1 from "../../components/HeaderBlock1";
+
 import { darkGreen } from "../../components/Constants";
 import RNPickerSelect from "react-native-picker-select";
 import { useIsFocused } from "@react-navigation/native";
@@ -85,36 +87,40 @@ const AssessmentsPage = (props) => {
         Forms
       </Text>
 
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="SNAP-IV 26"
         Press={() => isPatientSelected("SNAPQuizScreen")}
+        duration="05:00"
       />
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WSR-II"
         Press={() => isPatientSelected("WSRQuizScreen")}
+        duration="08:00"
       />
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
         Forms for Parents only
       </Text>
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WFIRS-P"
         Press={() => isPatientSelected("WFIRSQuizScreen")}
+        duration="15:00"
       />
 
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
         Forms for Teachers only
       </Text>
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="TAF"
         Press={() => isPatientSelected("TAFQuizScreen")}
+        duration="20:00"
       />
     </View>
   );

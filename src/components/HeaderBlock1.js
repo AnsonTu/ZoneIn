@@ -1,7 +1,14 @@
 import React from "react";
-import { TouchableOpacity, Text, Image } from "react-native";
+import { TouchableOpacity, Text, Image, View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
-export default function HeaderBlock({ bgColor, btnLabel, textColor, Press }) {
+export default function HeaderBlock1({
+  bgColor,
+  btnLabel,
+  textColor,
+  duration,
+  Press,
+}) {
   return (
     <TouchableOpacity
       onPress={Press}
@@ -18,9 +25,17 @@ export default function HeaderBlock({ bgColor, btnLabel, textColor, Press }) {
         marginVertical: 10,
       }}
     >
-      <Text style={{ color: textColor, fontSize: 25, fontWeight: "bold" }}>
-        {btnLabel}
-      </Text>
+      <View style={{ flexDirection: "column" }}>
+        <Text style={{ color: textColor, fontSize: 25, fontWeight: "bold" }}>
+          {btnLabel}
+        </Text>
+        <View style={{ flexDirection: "row", paddingTop: 10 }}>
+          <FontAwesome name="clock-o" size={20} color={textColor} />
+          <Text style={{ color: textColor, fontSize: 16, paddingLeft: 8 }}>
+            {duration}
+          </Text>
+        </View>
+      </View>
       <Image
         source={require("../../assets/arrow.png")}
         style={{ width: 20, height: 20 }}

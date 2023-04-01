@@ -19,7 +19,7 @@ const ResultsPage = (props) => {
     score.diagnosis,
     score.score,
   ]);
-
+  console.log(scores);
   const chartData = {
     labels: scores.map((score) => score.id),
     datasets: [
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
+    fontFamily: "Open Sans",
   },
   buttonText: {
     color: "#686A6C",
