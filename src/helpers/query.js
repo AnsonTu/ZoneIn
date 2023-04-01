@@ -104,6 +104,7 @@ const deleteChildProfile = async (childProfileDocId) => {
 };
 
 const addPatientAssessment = async (
+  userId,
   patient,
   assessmentType,
   assessmentScores,
@@ -120,6 +121,7 @@ const addPatientAssessment = async (
 
   try {
     await addDoc(collection(db, "assessments"), {
+      userId,
       patientId: patient.docId,
       firstName: patient.firstName,
       lastName: patient.lastName,

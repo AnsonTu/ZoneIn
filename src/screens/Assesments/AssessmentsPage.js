@@ -11,6 +11,7 @@ import { getUserInfo, getChildProfiles } from "../../helpers/query";
 
 const AssessmentsPage = (props) => {
   const isFocused = useIsFocused();
+  const [userId, setUserId] = useState("");
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
 
@@ -31,6 +32,7 @@ const AssessmentsPage = (props) => {
           value: `${childProfiles[i].firstName} ${childProfiles[i].lastName}`,
         };
       }
+      setUserId(userInfo.userId);
       setPatients(formattedProfiles);
     };
     if (isFocused) {
@@ -47,6 +49,7 @@ const AssessmentsPage = (props) => {
         (p) => p.label === selectedPatient
       );
       props.navigation.navigate(assessmentRoute, {
+        userId: userId,
         patientInfo: selectedPatientInfo[0],
       });
     } else {

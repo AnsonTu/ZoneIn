@@ -300,7 +300,7 @@ const questions4 = [
 ];
 
 const TAFQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo } = props.route.params;
 
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
@@ -427,7 +427,7 @@ const TAFQuizScreen = (props) => {
         console.log(res[0]);
         noSym = res[0].inattentive + res[0].hyperactive === 0 ? 1 : 0;
 
-        addPatientAssessment(patientInfo, "TAF", res, [
+        addPatientAssessment(userId, patientInfo, "TAF", res, [
           ...answers1,
           ...answers2,
           ...answers3,

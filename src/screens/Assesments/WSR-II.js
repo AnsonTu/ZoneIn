@@ -5,12 +5,12 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { RadioButton } from "react-native-paper";
 import TermsAndConditions from "./TermsScreen";
 import ProgressBar from "react-native-progress/Bar";
-import { darkGreen, green } from "../../components/Constants";
+import { green } from "../../components/Constants";
+import { addPatientAssessment } from "../../helpers/query";
 
 // 1. Attention
 const questions1 = [
@@ -1545,7 +1545,8 @@ const questions19 = [
 ];
 
 const WSRQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo } = props.route.params;
+
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
@@ -1987,6 +1988,7 @@ const WSRQuizScreen = (props) => {
     props.navigation.navigate("ResultsPage", { scores });
 
     await addPatientAssessment(
+      userId,
       patientInfo,
       "WFIRS",
       [

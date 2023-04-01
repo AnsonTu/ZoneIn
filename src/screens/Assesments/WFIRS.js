@@ -625,7 +625,7 @@ const questions6 = [
 ];
 
 const WFIRSQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo } = props.route.params;
 
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
@@ -1003,6 +1003,7 @@ const WFIRSQuizScreen = (props) => {
     console.log("this is scote 3:" + Score3);
     props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
+      userId,
       patientInfo,
       "WFIRS",
       [
