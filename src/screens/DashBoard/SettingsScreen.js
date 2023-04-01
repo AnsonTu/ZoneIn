@@ -22,21 +22,7 @@ const SettingsPage = (props) => {
       <Text style={[styles.username, darkModeEnabled && styles.darkText]}>
         {username}
       </Text>
-      <View style={styles.setting}>
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>
-          Notifications
-        </Text>
-        <Switch
-          value={notificationsEnabled}
-          onValueChange={setNotificationsEnabled}
-        />
-      </View>
-      <View style={styles.setting}>
-        <Text style={[styles.settingText, darkModeEnabled && styles.darkText]}>
-          Dark Mode
-        </Text>
-        <Switch value={darkModeEnabled} onValueChange={setDarkModeEnabled} />
-      </View>
+
       <TouchableOpacity
         style={styles.setting}
         onPress={() => {

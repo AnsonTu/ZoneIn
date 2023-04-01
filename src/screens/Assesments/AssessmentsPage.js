@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-import HeaderBlock from "../../components/HeaderBlock";
+import { View, Text, Alert } from "react-native";
+
+import HeaderBlock1 from "../../components/HeaderBlock1";
+
 import { darkGreen } from "../../components/Constants";
-import Picker from "react-native-picker-select";
+import RNPickerSelect from "react-native-picker-select";
 import { useIsFocused } from "@react-navigation/native";
 import { auth } from "../../../firebaseConfig";
 import { getUserInfo, getChildProfiles } from "../../helpers/query";
@@ -39,7 +41,6 @@ const AssessmentsPage = (props) => {
   const onValueChange = (value) => {
     setSelectedPatient(value);
   };
-
   const isPatientSelected = (assessmentRoute) => {
     if (selectedPatient) {
       const selectedPatientInfo = patients.filter(
@@ -49,7 +50,9 @@ const AssessmentsPage = (props) => {
         patientInfo: selectedPatientInfo[0],
       });
     } else {
-      console.error("No patient selected");
+      Alert.alert("Error", "No patient selected", [{ text: "OK" }], {
+        cancelable: false,
+      });
     }
   };
 
@@ -63,58 +66,61 @@ const AssessmentsPage = (props) => {
         paddingTop: 50,
       }}
     >
-      {/* <View style={{ padding: 10, borderColor: "black", borderWidth: 10 }}> */}
-      <Picker
+      <View
         style={{
-          borderRadius: 100,
-          color: darkGreen,
-          paddingHorizontal: 20,
-          height: "35%",
-          width: "78%",
-          backgroundColor: "rgb(220,220, 220)",
-          marginVertical: 10,
+          padding: 10,
+          borderColor: "black",
+          borderWidth: 1,
+          width: 150,
         }}
-        items={patients}
-        placeholder={{ label: "Select Patient", value: null, color: "red" }}
-        onValueChange={onValueChange}
-        value={selectedPatient}
-      />
-      {/* </View> */}
+      >
+        <RNPickerSelect
+          style={{ color: "black" }}
+          items={patients}
+          placeholder={{ label: "Select Patient", value: null }}
+          onValueChange={onValueChange}
+          value={selectedPatient}
+        />
+      </View>
 
       <Text style={{ fontSize: 16, fontWeight: "bold", paddingTop: 20 }}>
         Forms
       </Text>
 
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="SNAP-IV 26"
-        Press={() => isPatientSelected("QuizScreen")}
+        Press={() => isPatientSelected("SNAPQuizScreen")}
+        duration="05:00"
       />
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WSR-II"
-        Press={() => isPatientSelected("ReportsPage")}
+        Press={() => isPatientSelected("WSRQuizScreen")}
+        duration="08:00"
       />
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
         Forms for Parents only
       </Text>
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="WFIRS-P"
         Press={() => isPatientSelected("WFIRSQuizScreen")}
+        duration="15:00"
       />
 
       <Text style={{ fontSize: 16, fontWeight: "bold" }}>
         Forms for Teachers only
       </Text>
-      <HeaderBlock
+      <HeaderBlock1
         textColor="white"
         bgColor={darkGreen}
         btnLabel="TAF"
         Press={() => isPatientSelected("TAFQuizScreen")}
+        duration="20:00"
       />
     </View>
   );

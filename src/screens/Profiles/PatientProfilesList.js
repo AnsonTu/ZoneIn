@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { darkGreen } from "../../components/Constants";
+import { darkGreen, green } from "../../components/Constants";
 import Field from "../../components/Field";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import SelectDropdown from "react-native-select-dropdown";
@@ -63,7 +63,7 @@ const PatientProfileList = (props) => {
   const onModalOpen = () => {
     setPatientFirstName("");
     setPatientLastName("");
-    setPatientSex("Male");
+    setPatientSex("");
     setPatientDOB(new Date());
     setIsModalVisible(true);
   };
@@ -176,48 +176,62 @@ const PatientProfileList = (props) => {
               value={patientLastName}
               onChangeText={setPatientLastName}
             />
-            <Text
+            <View
               style={{
-                color: darkGreen,
-                fontSize: 15,
+                paddingTop: 10,
               }}
-            >
-              Date of Birth
-            </Text>
+            ></View>
             <TouchableOpacity
               style={{
+                backgroundColor: "rgb(220, 220, 220)",
                 width: "78%",
+                borderRadius: 10,
               }}
               onPress={() => setIsDateModalVisible(true)}
             >
               <Text
                 style={{
-                  backgroundColor: "rgb(220, 220, 220)",
+                  color: darkGreen,
                   fontSize: 15,
-                  paddingVertical: 10,
+                }}
+              ></Text>
+              <Text
+                style={{
+                  fontSize: 18,
+
                   paddingHorizontal: 20,
                   marginBottom: 12,
-                  borderRadius: 25,
+
+                  color: darkGreen,
                 }}
               >
                 {patientDOB.toISOString().split("T")[0]}
               </Text>
             </TouchableOpacity>
             {isDateModalVisible && (
-              <RNDateTimePicker value={patientDOB} onChange={onDateChange} />
+              <RNDateTimePicker
+                style={{
+                  fontSize: 18,
+                  paddingVertical: 10,
+
+                  marginBottom: 12,
+                }}
+                value={patientDOB}
+                onChange={onDateChange}
+              />
             )}
+
             <Text
               style={{
+                paddingTop: 10,
                 color: darkGreen,
                 fontSize: 16,
+                textAlign: "right",
               }}
-            >
-              Gender
-            </Text>
+            ></Text>
             <SelectDropdown
               data={genders}
               defaultValue={patientSex}
-              buttonStyle={{ borderWidth: 2 }}
               onSelect={(selectedItem) => {
                 setPatientSex(selectedItem);
               }}
@@ -231,19 +245,26 @@ const PatientProfileList = (props) => {
               dropdownStyle={styles.dropdown4DropdownStyle}
               rowStyle={styles.dropdown4RowStyle}
               rowTextStyle={styles.dropdown4RowTxtStyle}
+              buttonStyle={styles.dropdown4RowButtonStyle}
+              defaultButtonText={"Pick a Gender"}
+              buttonTextStyle={{
+                ...styles.dropdownButtonTextStyle,
+                textAlign: "left",
+                color: darkGreen, // add this line
+              }}
             />
-            <View style={styles.modalButtons}>
+            <View style={styles.buttonContainer}>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.EditProfileButton}
                 onPress={() => setIsModalVisible(false)}
               >
-                <Text style={styles.modalButtonText}>Cancel</Text>
+                <Text style={styles.EditProfileButtonText}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.modalButton}
+                style={styles.EditProfileButton}
                 onPress={addNewPatient}
               >
-                <Text style={styles.modalButtonText}>Add</Text>
+                <Text style={styles.EditProfileButtonText}>Add</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -260,10 +281,25 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     padding: 20,
   },
+  EditProfileButton: {
+    backgroundColor: green,
+    padding: 10,
+    margin: 5,
+    borderRadius: 5,
+    justifyContent: "space-between",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    marginTop: "2%",
+  },
+  EditProfileButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
   patientTile: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#83C5BE",
+    backgroundColor: green,
     borderRadius: 15,
     width: "100%",
     height: "15%",
@@ -272,7 +308,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   addButton: {
-    backgroundColor: "#006D77",
+    backgroundColor: darkGreen,
     borderRadius: 5,
     margin: 10,
     padding: 10,
@@ -299,15 +335,25 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   modalButtons: {
-    padding: 20,
     flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    paddingBottom: 20,
   },
   modalButton: {
     padding: 20,
     justifyContent: "center",
-    width: 150,
+    width: 160,
   },
-  modalButtonText: { borderWidth: 2, padding: 15 },
+  modalButtonText: {
+    borderWidth: 2,
+    padding: 15,
+    backgroundColor: "#BFDCE5",
+    color: "#686A6C",
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingHorizontal: 20,
+  },
   modalContent: {
     alignItems: "center",
     backgroundColor: "#EFEFEF",
@@ -335,12 +381,21 @@ const styles = StyleSheet.create({
     color: "black",
     padding: 10,
     width: "100%",
+    fontSize: 18,
+  },
+  dropdown4RowButtonStyle: {
+    borderRadius: 10,
+    color: darkGreen,
+    height: "5%",
+    width: "78%",
+    justifyContent: "flex-start",
+    backgroundColor: "rgb(220,220, 220)",
   },
   input: {
     borderColor: "gray",
     borderRadius: 5,
     borderWidth: 3,
-    fontSize: 16,
+    fontSize: 18,
     padding: 10,
     width: "100%",
   },

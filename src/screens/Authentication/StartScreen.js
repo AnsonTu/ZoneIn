@@ -8,7 +8,6 @@ const StartScreen = (props) => {
   return (
     <Background>
       <View style={{ marginHorizontal: 40, marginVertical: 100 }}>
-        <Text style={{ color: "white", fontSize: 64 }}>i-Care</Text>
         <Text style={{ color: "white", fontSize: 64, marginBottom: 60 }}>
           ZoneIn
         </Text>
