@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { auth } from "../../../firebaseConfig";
 import { getUserInfo, updateUserInfo } from "../../helpers/query";
-import * as ImagePicker from "expo-image-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { darkGreen } from "../../components/Constants";
 
@@ -174,7 +173,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: "20%",
     fontWeight: "bold",
   },
-
   label: {
     fontWeight: "bold",
     marginTop: 20,
@@ -184,36 +182,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: darkGreen,
     paddingHorizontal: 20,
-    height: "10%",
+    height: 40,
     width: "90%",
     backgroundColor: "rgb(220,220, 220)",
     marginVertical: 10,
   },
   text: {
     fontSize: 18,
-    paddingTop: 20,
+    paddingTop: 7,
     borderRadius: 20,
     color: darkGreen,
     paddingHorizontal: 20,
-    height: "10%",
+    height: 40,
     width: "90%",
     backgroundColor: "rgb(220,220, 220)",
     marginVertical: 10,
-  },
-  button: {
-    height: 40,
-    width: "50%",
-    backgroundColor: "gray",
-    color: "white",
-    paddingLeft: 20,
-    padding: 10,
-    textAlign: "center",
-    marginBottom: 12,
-  },
-  image: {
-    width: 200,
-    height: 200,
-    marginVertical: 20,
   },
 });
 
