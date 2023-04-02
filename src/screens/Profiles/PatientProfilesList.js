@@ -125,11 +125,6 @@ const PatientProfileList = (props) => {
     }, 1000);
   };
 
-  const navigateToAnotherFile = () => {
-    // Do something when navigating to another file
-    console.log("Navigating to another file...");
-  };
-
   return (
     <TouchableWithoutFeedback onPress={handlePressOutsidePatientTiles}>
       <View style={styles.container}>

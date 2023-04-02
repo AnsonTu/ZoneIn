@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   Button,
   StyleSheet,
   TouchableOpacity,
@@ -13,9 +12,8 @@ import { auth } from "../../../firebaseConfig";
 import { getUserInfo, updateUserInfo } from "../../helpers/query";
 import * as ImagePicker from "expo-image-picker";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import Btn from "../../components/Btn";
 import { darkGreen } from "../../components/Constants";
-import Field from "../../components/Field";
+
 const ProfilesScreen = () => {
   const [documentId, setDocumentId] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -23,15 +21,12 @@ const ProfilesScreen = () => {
   const [email, setEmail] = useState(auth.currentUser.email);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [DOB, setDOB] = useState(new Date());
-  const [profileImage, setProfileImage] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [document, setDocument] = useState(null);
   const [isDateModalVisible, setIsDateModalVisible] = useState(false);
 
   useEffect(() => {
     const getCurrentUserInfo = async () => {
       const userInfo = await getUserInfo(auth.currentUser.uid);
-      console.log(userInfo);
       setDocumentId(userInfo.docId);
       setFirstName(userInfo.firstName);
       setLastName(userInfo.lastName);
@@ -76,18 +71,6 @@ const ProfilesScreen = () => {
       phoneNumber,
       DOB
     );
-  };
-
-  const handleUploadDocument = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setDocument(result.uri);
-    }
   };
 
   return (
