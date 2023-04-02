@@ -103,6 +103,23 @@ const deleteChildProfile = async (childProfileDocId) => {
     .catch((e) => console.error("Error deleting profile: ", e));
 };
 
+const getPatientAssessments = async (patientId) => {
+  let patientAssessments = [];
+  const patientAssessmentsQuery = query(
+    collection(db, "assessments"),
+    where("patientId", "==", patientId)
+  );
+  const querySnapshot = await getDocs(patientAssessmentsQuery);
+  querySnapshot.forEach((doc) => {
+    patientAssessments = [
+      ...patientAssessments,
+      { ...doc.data(), docId: doc.id },
+    ];
+  });
+
+  return patientAssessments;
+};
+
 const addPatientAssessment = async (
   userId,
   patient,
@@ -141,5 +158,6 @@ export {
   addChildProfile,
   updateChildProfile,
   deleteChildProfile,
+  getPatientAssessments,
   addPatientAssessment,
 };

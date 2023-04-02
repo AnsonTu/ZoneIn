@@ -47,7 +47,7 @@ const ResultsPage = (props) => {
     barPercentage: 0.6,
   };
 
-  const tableWidthArr = [50, 150, 100, 80];
+  const tableWidthArr = [50, 150, 100, 75];
 
   return (
     <View style={styles.container}>

@@ -437,7 +437,6 @@ const SNAPQuizScreen = (props) => {
       },
     ];
 
-    console.log("this is score 3:" + Score3);
     props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
       userId,
