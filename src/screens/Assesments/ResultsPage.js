@@ -10,8 +10,10 @@ import {
 import { BarChart } from "react-native-chart-kit";
 import { Table, Row, Rows } from "react-native-table-component";
 import { darkGreen, green } from "../../components/Constants";
+
 const ResultsPage = (props) => {
   const { scores } = props.route.params;
+
   const header = ["ID", "Assessment", "Diagnosis", "Score"];
   const data = scores.map((score) => [
     score.id,
@@ -19,7 +21,6 @@ const ResultsPage = (props) => {
     score.diagnosis,
     score.score,
   ]);
-  console.log(scores);
   const chartData = {
     labels: scores.map((score) => score.id),
     datasets: [
