@@ -151,6 +151,43 @@ const addPatientAssessment = async (
   }
 };
 
+const getPatientReports = async (patientId) => {
+  let patientReports = [];
+  const patientReportsQuery = query(
+    collection(db, "reports"),
+    where("patientId", "==", patientId)
+  );
+  const querySnapshot = await getDocs(patientReportsQuery);
+  querySnapshot.forEach((doc) => {
+    patientReports = [...patientReports, { ...doc.data(), docId: doc.id }];
+  });
+
+  return patientReports;
+};
+
+const addPatientReport = async (
+  userId,
+  patientId,
+  assessmentType,
+  assessmentAnswers
+) => {
+  const answers = [];
+  for (let i = 0; i < assessmentAnswers.length; i++) {
+    answers[i] = assessmentAnswers[i];
+  }
+
+  try {
+    await addDoc(collection(db, "reports"), {
+      userId,
+      patientId,
+      assessmentType,
+      answers,
+    });
+  } catch (e) {
+    console.error("Error creating child profile: ", e);
+  }
+};
+
 export {
   getUserInfo,
   updateUserInfo,
@@ -160,4 +197,6 @@ export {
   deleteChildProfile,
   getPatientAssessments,
   addPatientAssessment,
+  getPatientReports,
+  addPatientReport,
 };

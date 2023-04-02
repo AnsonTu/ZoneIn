@@ -424,7 +424,6 @@ const TAFQuizScreen = (props) => {
       .then((res) => res.json())
       .then((res) => {
         setScores(res[0]);
-        console.log(res[0]);
         noSym = res[0].inattentive + res[0].hyperactive === 0 ? 1 : 0;
 
         addPatientAssessment(userId, patientInfo, "TAF", res, [
@@ -485,7 +484,7 @@ const TAFQuizScreen = (props) => {
     },
   ];
 
-  const tableWidthArr = [172, 150];
+  const tableWidthArr = [172, 157];
   if (!termsAgreed) {
     return <TermsAndConditions onAgree={handleAgree} />;
   } else if (!quizStarted) {

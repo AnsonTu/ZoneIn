@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,29 +7,93 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import SelectDropdown from "react-native-select-dropdown";
 import RNPickerSelect from "react-native-picker-select";
-import { darkGreen, green } from "../../components/Constants";
+import { useIsFocused } from "@react-navigation/native";
+import { auth } from "../../../firebaseConfig";
+import {
+  getUserInfo,
+  getChildProfiles,
+  addPatientReport,
+} from "../../helpers/query";
+import { green } from "../../components/Constants";
 
-const CreateReport = () => {
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+const CreateReport = (props) => {
+  const isFocused = useIsFocused();
+  const [patients, setPatients] = useState([]);
   const [question1, setQuestion1] = useState("");
   const [question2, setQuestion2] = useState("");
   const [question3, setQuestion3] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getCurrentAccountInfo = async () => {
+      let formattedProfiles = [];
+      const userInfo = await getUserInfo(auth.currentUser.uid);
+      const childProfiles = await getChildProfiles(userInfo.userId);
+      for (let i = 0; i < childProfiles.length; i++) {
+        formattedProfiles[i] = {
+          docId: childProfiles[i].docId,
+          id: childProfiles[i].firstName + childProfiles[i].lastName + i,
+          firstName: childProfiles[i].firstName,
+          lastName: childProfiles[i].lastName,
+          sex: childProfiles[i].sex,
+          dob: childProfiles[i].dateOfBirth,
+          label: `${childProfiles[i].firstName} ${childProfiles[i].lastName}`,
+          value: childProfiles[i].docId,
+        };
+      }
+      setPatients(formattedProfiles);
+    };
+    if (isFocused) {
+      getCurrentAccountInfo();
+    }
+  }, [isFocused]);
 
   const onValueChange = (value) => {
     setSelectedValue(value);
   };
-  const patients = [
-    { label: "Jane Doe", value: "Jane Doe" },
-    { label: "John Doe", value: "John Doe" },
-    { label: "Jane Smith", value: "Jane Smith" },
-  ];
-  const handleFormSubmit = () => {
-    // TODO: Handle form submission
+
+  const handleFormSubmit = async () => {
+    const formattedTextInputs = [
+      {
+        question: 1,
+        response: question1,
+      },
+      {
+        question: 2,
+        response: question2,
+      },
+      {
+        question: 3,
+        response: question3,
+      },
+    ];
+    setIsLoading(true);
+    await fetch("https://ZoneIn.sarahlong4.repl.co/assessment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formattedTextInputs),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        addPatientReport(auth.currentUser.uid, selectedValue, res, [
+          question1,
+          question2,
+          question3,
+        ]);
+        props.navigation.navigate("TAFQuizScreen", {
+          score: {
+            inattentive: res[0].inattentive,
+            hyperactive: res[0].hyperactive,
+          },
+          pageNum: 4,
+        });
+      })
+      .catch((e) => console.error(e));
+    setIsLoading(false);
   };
 
   const onQuestion1Change = (question1) => {
@@ -39,13 +103,9 @@ const CreateReport = () => {
   const onQuestion2Change = (question2) => {
     setQuestion2(question2);
   };
-  const onQuestion3Change = (question2) => {
+
+  const onQuestion3Change = (question3) => {
     setQuestion3(question3);
-  };
-  const handleDateChange = (_, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
   };
 
   return (
@@ -76,25 +136,6 @@ const CreateReport = () => {
               value={selectedValue}
             />
           </View>
-          <Text
-            style={{
-              marginTop: 20,
-              fontSize: 18,
-              fontWeight: "500",
-              marginBottom: 8,
-            }}
-          >
-            Date:
-          </Text>
-
-          {
-            <DateTimePicker
-              value={date}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-            />
-          }
           <View style={styles.questionContainer}>
             <Text style={styles.questionText}>
               Question 1: What was the setting/environment the child was in?
@@ -126,8 +167,14 @@ const CreateReport = () => {
               onChangeText={onQuestion3Change}
               style={styles.textInput}
             />
-            <TouchableOpacity style={styles.button} onPress={handleFormSubmit}>
-              <Text style={styles.buttonText}>Submit</Text>
+            <TouchableOpacity
+              style={styles.button}
+              disabled={isLoading || !selectedValue}
+              onPress={handleFormSubmit}
+            >
+              <Text style={styles.buttonText}>
+                {isLoading ? "Loading..." : "Submit"}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
