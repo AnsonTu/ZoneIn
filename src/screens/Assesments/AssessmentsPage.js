@@ -12,6 +12,7 @@ import { getUserInfo, getChildProfiles } from "../../helpers/query";
 const AssessmentsPage = (props) => {
   const isFocused = useIsFocused();
   const [userId, setUserId] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [patients, setPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
 
@@ -33,6 +34,7 @@ const AssessmentsPage = (props) => {
         };
       }
       setUserId(userInfo.userId);
+      setUserRole(userInfo.role);
       setPatients(formattedProfiles);
     };
     if (isFocused) {
@@ -48,10 +50,33 @@ const AssessmentsPage = (props) => {
       const selectedPatientInfo = patients.filter(
         (p) => p.label === selectedPatient
       );
-      props.navigation.navigate(assessmentRoute, {
-        userId: userId,
-        patientInfo: selectedPatientInfo[0],
-      });
+      if (assessmentRoute === "TAFQuizScreen" && userRole !== "Teacher") {
+        Alert.alert(
+          "Error",
+          "Only teachers can complete this assessment",
+          [{ text: "OK" }],
+          {
+            cancelable: false,
+          }
+        );
+      } else if (
+        assessmentRoute === "WFIRSQuizScreen" &&
+        userRole !== "Parent"
+      ) {
+        Alert.alert(
+          "Error",
+          "Only parents can complete this assessment",
+          [{ text: "OK" }],
+          {
+            cancelable: false,
+          }
+        );
+      } else {
+        props.navigation.navigate(assessmentRoute, {
+          userId: userId,
+          patientInfo: selectedPatientInfo[0],
+        });
+      }
     } else {
       Alert.alert("Error", "No patient selected", [{ text: "OK" }], {
         cancelable: false,

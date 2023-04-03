@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
+  Alert,
   View,
   Text,
   TouchableOpacity,
@@ -27,6 +28,7 @@ const PatientProfileList = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isDateModalVisible, setIsDateModalVisible] = useState(false);
   const [userId, setUserId] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [patientFirstName, setPatientFirstName] = useState("");
   const [patientLastName, setPatientLastName] = useState("");
   const [patientDOB, setPatientDOB] = useState(new Date());
@@ -42,6 +44,7 @@ const PatientProfileList = (props) => {
       let formattedProfiles = [];
       const userInfo = await getUserInfo(auth.currentUser.uid);
       setUserId(userInfo.userId);
+      setUserRole(userInfo.role);
       const childProfiles = await getChildProfiles(userInfo.userId);
       for (let i = 0; i < childProfiles.length; i++) {
         formattedProfiles[i] = {
@@ -61,11 +64,22 @@ const PatientProfileList = (props) => {
   }, [isFocused]);
 
   const onModalOpen = () => {
-    setPatientFirstName("");
-    setPatientLastName("");
-    setPatientSex("");
-    setPatientDOB(new Date());
-    setIsModalVisible(true);
+    if (userRole !== "Parent") {
+      Alert.alert(
+        "Error",
+        "Only parents can create new child profiles",
+        [{ text: "OK" }],
+        {
+          cancelable: false,
+        }
+      );
+    } else {
+      setPatientFirstName("");
+      setPatientLastName("");
+      setPatientSex("");
+      setPatientDOB(new Date());
+      setIsModalVisible(true);
+    }
   };
 
   const addNewPatient = async () => {
