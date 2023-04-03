@@ -1,29 +1,59 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
-import { darkGreen } from "../../components/Constants";
+import { useIsFocused } from "@react-navigation/native";
+import { auth } from "../../../firebaseConfig";
+import {
+  getUserInfo,
+  getChildProfiles,
+  getPatientReports,
+} from "../../helpers/query";
 
-const ViewReport = () => {
-  const [tab, setTab] = useState("completed");
-  const [selectedValue, setSelectedValue] = useState(null);
+const ViewReport = (props) => {
+  const patientId = props.route.params.selectedPatientId;
 
-  const assessments = [
-    { name: "Report 1" },
-    { name: "Report 2" },
-    { name: "Report 3" },
-    { name: "Report 4" },
-    { name: "Report 5" },
-  ];
+  const isFocused = useIsFocused();
+  const [patients, setPatients] = useState([]);
+  const [selectedValue, setSelectedValue] = useState(patientId);
+  const [reports, setReports] = useState([]);
 
-  const patients = [
-    { label: "Jane Doe", value: "Jane Doe" },
-    { label: "John Doe", value: "John Doe" },
-    { label: "Jane Smith", value: "Jane Smith" },
-  ];
+  useEffect(() => {
+    const getCurrentAccountInfo = async () => {
+      let formattedProfiles = [];
+      const userInfo = await getUserInfo(auth.currentUser.uid);
+      const childProfiles = await getChildProfiles(userInfo.userId);
+      for (let i = 0; i < childProfiles.length; i++) {
+        formattedProfiles[i] = {
+          docId: childProfiles[i].docId,
+          id: childProfiles[i].firstName + childProfiles[i].lastName + i,
+          firstName: childProfiles[i].firstName,
+          lastName: childProfiles[i].lastName,
+          sex: childProfiles[i].sex,
+          dob: childProfiles[i].dateOfBirth,
+          label: `${childProfiles[i].firstName} ${childProfiles[i].lastName}`,
+          value: childProfiles[i].docId,
+        };
+      }
+      setPatients(formattedProfiles);
+    };
+    if (isFocused) {
+      getCurrentAccountInfo();
+    }
+  }, [isFocused]);
 
-  const onValueChange = (value) => {
+  const onValueChange = async (value) => {
     setSelectedValue(value);
+    if (!!selectedValue) {
+      const patientReports = await getPatientReports(selectedValue);
+      setReports(patientReports);
+    }
   };
 
   return (
@@ -67,15 +97,28 @@ const ViewReport = () => {
             />
           </View>
           <View style={styles.assessmentsContainer}>
-            {assessments.map((assessment, index) => (
-              <View key={index} style={styles.assessment}>
-                <Ionicons
-                  name="ios-checkmark-circle"
-                  size={40}
-                  color="#83C5BE"
-                />
-                <Text style={styles.assessmentName}>{assessment.name}</Text>
-              </View>
+            {reports.map((report, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() =>
+                  props.navigation.navigate("TAFQuizScreen", {
+                    score: {
+                      inattentive: report.assessmentType[0].inattentive,
+                      hyperactive: report.assessmentType[0].hyperactive,
+                    },
+                    pageNum: 4,
+                  })
+                }
+              >
+                <View key={index} style={styles.assessment}>
+                  <Ionicons
+                    name="ios-checkmark-circle"
+                    size={40}
+                    color="#83C5BE"
+                  />
+                  <Text style={styles.assessmentName}>Report {index + 1}</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>

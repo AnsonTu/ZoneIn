@@ -185,13 +185,21 @@ const Patient_Info_Profile = (props) => {
       </Modal>
       <TouchableOpacity
         style={styles.assessTile}
-        onPress={() => props.navigation.navigate("CompletedAssesments")}
+        onPress={() =>
+          props.navigation.navigate("CompletedAssesments", {
+            selectedPatientId: patient.docId,
+          })
+        }
       >
         <Text style={styles.assessTileText}>Assessments</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.assessTile}
-        onPress={() => props.navigation.navigate("ViewReport")}
+        onPress={() =>
+          props.navigation.navigate("ViewReport", {
+            selectedPatientId: patient.docId,
+          })
+        }
       >
         <Text style={styles.assessTileText}>Reports</Text>
       </TouchableOpacity>

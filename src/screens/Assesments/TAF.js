@@ -300,16 +300,16 @@ const questions4 = [
 ];
 
 const TAFQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo, pageNum = 0, score = {} } = props.route.params;
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(pageNum);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
   const [answers2, setAnswers2] = useState(Array(questions2.length).fill(null));
   const [answers3, setAnswers3] = useState(Array(questions3.length).fill(null));
   const [answers4, setAnswers4] = useState(Array(questions4.length).fill(null));
-  const [scores, setScores] = useState({});
+  const [scores, setScores] = useState(score);
   const [isLoading, setIsLoading] = useState(false);
-  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [termsAgreed, setTermsAgreed] = useState(pageNum);
   const [quizStarted, setQuizStarted] = useState(false);
   const screenWidth = Dimensions.get("window").width;
   let noSym = 0;
@@ -424,10 +424,9 @@ const TAFQuizScreen = (props) => {
       .then((res) => res.json())
       .then((res) => {
         setScores(res[0]);
-        console.log(res[0]);
         noSym = res[0].inattentive + res[0].hyperactive === 0 ? 1 : 0;
 
-        addPatientAssessment(patientInfo, "TAF", res, [
+        addPatientAssessment(userId, patientInfo, "TAF", res, [
           ...answers1,
           ...answers2,
           ...answers3,
@@ -461,8 +460,6 @@ const TAFQuizScreen = (props) => {
     useShadowColorFromDataset: false, // optional
   };
 
-  console.log("Scores", scores);
-
   const data = [
     {
       name: "Inattentive",
@@ -487,7 +484,7 @@ const TAFQuizScreen = (props) => {
     },
   ];
 
-  const tableWidthArr = [182, 150];
+  const tableWidthArr = [172, 157];
   if (!termsAgreed) {
     return <TermsAndConditions onAgree={handleAgree} />;
   } else if (!quizStarted) {

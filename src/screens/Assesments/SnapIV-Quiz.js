@@ -307,7 +307,7 @@ const questions3 = [
 ];
 
 const SNAPQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo } = props.route.params;
 
   const [page, setPage] = useState(0);
   let [Score1, setScore1] = useState(0);
@@ -437,9 +437,9 @@ const SNAPQuizScreen = (props) => {
       },
     ];
 
-    console.log("this is score 3:" + Score3);
     props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
+      userId,
       patientInfo,
       "SNAPIV",
       [calculateScore1(), calculateScore2(), calculateScore3()],

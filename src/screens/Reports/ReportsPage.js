@@ -1,5 +1,5 @@
-import * as React from "react";
-import { View, Text } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import HeaderBlock from "../../components/HeaderBlock";
 import { darkGreen } from "../../components/Constants";
 
@@ -18,19 +18,31 @@ const ReportsPage = (props) => {
         textColor="white"
         bgColor={darkGreen}
         btnLabel="Completed Assessments"
-        Press={() => props.navigation.navigate("CompletedAssesments")}
+        Press={() =>
+          props.navigation.navigate("CompletedAssesments", {
+            selectedPatientId: "",
+          })
+        }
       />
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="View Reports"
-        Press={() => props.navigation.navigate("ViewReport")}
+        Press={() =>
+          props.navigation.navigate("ViewReport", {
+            selectedPatientId: "",
+          })
+        }
       />
       <HeaderBlock
         textColor="white"
         bgColor={darkGreen}
         btnLabel="Create Report"
-        Press={() => props.navigation.navigate("CreateReport")}
+        Press={() =>
+          props.navigation.navigate("CreateReport", {
+            selectedPatientId: "",
+          })
+        }
       />
     </View>
   );

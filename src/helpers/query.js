@@ -103,7 +103,25 @@ const deleteChildProfile = async (childProfileDocId) => {
     .catch((e) => console.error("Error deleting profile: ", e));
 };
 
+const getPatientAssessments = async (patientId) => {
+  let patientAssessments = [];
+  const patientAssessmentsQuery = query(
+    collection(db, "assessments"),
+    where("patientId", "==", patientId)
+  );
+  const querySnapshot = await getDocs(patientAssessmentsQuery);
+  querySnapshot.forEach((doc) => {
+    patientAssessments = [
+      ...patientAssessments,
+      { ...doc.data(), docId: doc.id },
+    ];
+  });
+
+  return patientAssessments;
+};
+
 const addPatientAssessment = async (
+  userId,
   patient,
   assessmentType,
   assessmentScores,
@@ -120,11 +138,49 @@ const addPatientAssessment = async (
 
   try {
     await addDoc(collection(db, "assessments"), {
+      userId,
       patientId: patient.docId,
       firstName: patient.firstName,
       lastName: patient.lastName,
       assessmentType,
       scores,
+      answers,
+    });
+  } catch (e) {
+    console.error("Error creating child profile: ", e);
+  }
+};
+
+const getPatientReports = async (patientId) => {
+  let patientReports = [];
+  const patientReportsQuery = query(
+    collection(db, "reports"),
+    where("patientId", "==", patientId)
+  );
+  const querySnapshot = await getDocs(patientReportsQuery);
+  querySnapshot.forEach((doc) => {
+    patientReports = [...patientReports, { ...doc.data(), docId: doc.id }];
+  });
+
+  return patientReports;
+};
+
+const addPatientReport = async (
+  userId,
+  patientId,
+  assessmentType,
+  assessmentAnswers
+) => {
+  const answers = [];
+  for (let i = 0; i < assessmentAnswers.length; i++) {
+    answers[i] = assessmentAnswers[i];
+  }
+
+  try {
+    await addDoc(collection(db, "reports"), {
+      userId,
+      patientId,
+      assessmentType,
       answers,
     });
   } catch (e) {
@@ -139,5 +195,8 @@ export {
   addChildProfile,
   updateChildProfile,
   deleteChildProfile,
+  getPatientAssessments,
   addPatientAssessment,
+  getPatientReports,
+  addPatientReport,
 };

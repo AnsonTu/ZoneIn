@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { onAuthStateChanged } from "@firebase/auth";
@@ -29,6 +30,7 @@ import TermsScreen from "./src/screens/Assesments/TermsScreen";
 import ResultsPage from "./src/screens/Assesments/ResultsPage";
 
 import MainNavContainer from "./src/navigation/MainNavContainer";
+
 const Stack = createNativeStackNavigator();
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -37,6 +39,7 @@ const loadFonts = async () => {
 };
 
 function App() {
+  LogBox.ignoreAllLogs();
   const [isAuth, setIsAuth] = useState(false);
   onAuthStateChanged(auth, async (user) => {
     user ? setIsAuth(true) : setIsAuth(false);

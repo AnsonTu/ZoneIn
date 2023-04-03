@@ -625,7 +625,7 @@ const questions6 = [
 ];
 
 const WFIRSQuizScreen = (props) => {
-  const { patientInfo } = props.route.params;
+  const { userId, patientInfo } = props.route.params;
 
   const [page, setPage] = useState(0);
   const [answers1, setAnswers1] = useState(Array(questions1.length).fill(null));
@@ -942,7 +942,7 @@ const WFIRSQuizScreen = (props) => {
     return Score6.toFixed(3);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
     const diagnosis1 = calculateScore1();
     const diagnosis2 = calculateScore2();
@@ -953,56 +953,52 @@ const WFIRSQuizScreen = (props) => {
 
     const scores = [
       {
-        title: "Inattention Subset",
+        title: "Section A: Family",
         maxScore: 27,
         diagnosis: diagnosis1,
         score: Score1,
-
         id: 1,
       },
       {
-        title: "Hyperactivity/Impulsivity Subset",
+        title: "Section B: School",
         maxScore: 27,
         diagnosis: diagnosis2,
         score: Score2,
         id: 2,
       },
       {
-        title: "ODD (Oppositional Defiant Disorder) Subset",
-        maxScore: 24,
+        title: "Section C: Life Skills",
+        maxScore: 27,
         diagnosis: diagnosis3,
         score: Score3,
-
         id: 3,
       },
       {
-        title: "Inattention Subset",
+        title: "Section D: Child’s Self-Concept",
         maxScore: 27,
         diagnosis: diagnosis4,
         score: Score4,
-
-        id: 1,
+        id: 4,
       },
       {
-        title: "Hyperactivity/Impulsivity Subset",
+        title: "Section E: Social Activities",
         maxScore: 27,
         diagnosis: diagnosis5,
         score: Score5,
-
-        id: 2,
+        id: 5,
       },
       {
-        title: "ODD (Oppositional Defiant Disorder) Subset",
-        maxScore: 24,
+        title: "Section F: Risky Activities",
+        maxScore: 27,
         diagnosis: diagnosis6,
         score: Score6,
-
-        id: 3,
+        id: 6,
       },
     ];
-    console.log("this is scote 3:" + Score3);
+
     props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
+      userId,
       patientInfo,
       "WFIRS",
       [
@@ -1226,7 +1222,7 @@ const WFIRSQuizScreen = (props) => {
             {page === 5 && (
               <TouchableOpacity
                 style={[styles.button, !canSubmit && styles.disabledButton]}
-                onPress={handleSubmit}
+                onPress={() => handleSubmit(patientInfo)}
                 disabled={!canSubmit}
               >
                 <Text style={styles.buttonText}>Submit</Text>
