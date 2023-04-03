@@ -1769,8 +1769,8 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score1 = markedCD;
-    setScore1(score1);
+    setScore1(markedCD);
+
     if (score1 >= 6) return "ADHD Inattentive Type";
     else return "No Inattentive symptoms";
   };
@@ -1787,8 +1787,7 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score2 = markedCD;
-    setScore2(score2);
+    setScore2(markedCD);
 
     if (score2 >= 6) return "ADHD-Hyperactive/Impulsive Type";
     else return "No Hyperactive/Impulsive symptoms";
@@ -1807,8 +1806,8 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score3 = markedCD;
-    setScore3(score3);
+    setScore3(markedCD);
+
     if (score3 >= 4) return "ADHD Inattentive Type";
     else return "No Inattentive symptoms";
   };
@@ -1826,8 +1825,8 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score16 = markedCD;
-    setScore16(score16);
+    setScore16(markedCD);
+
     if (score16 >= 3) return "Conduct Disorder";
     else return "No Conduct Disorder symptoms";
   };
@@ -1845,8 +1844,7 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score8 = markedCD;
-    setScore8(score8);
+    setScore8(markedCD);
 
     if (score8 >= 5) return "Depressive Disorder";
     else return "No Depressive Disorder symptoms";
@@ -1865,8 +1863,8 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score9 = markedCD;
-    setScore9(score9);
+    setScore9(markedCD);
+
     if (score9 >= 5) return "Manic Depression (Bipolar Depressive Disorder)";
     else return "No Manic Depression (Bipolar Depressive Disorder) symptoms";
   };
@@ -1884,8 +1882,8 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score19 = markedCD;
-    setScore19(score19);
+    setScore19(markedCD);
+
     if (score19 >= 5) return "Borderline Personality Disorder";
     else return "No Borderline Personality Disorder symptoms";
   };
@@ -1910,13 +1908,13 @@ const WSRQuizScreen = (props) => {
         }
       }
     }
-    score1 = markedCD;
-    setScore1(score1);
+    setScore1(markedCD);
+
     if (score20 >= 6) return "ADHD-Combined";
     else return "No ADHD-Combined symptoms";
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (patientInfo) => {
     setPage(page + 1);
     const diagnosis1 = calculateScore1();
     const diagnosis2 = calculateScore2();
@@ -1985,12 +1983,12 @@ const WSRQuizScreen = (props) => {
         id: 8,
       },
     ];
-    props.navigation.navigate("ResultsPage", { scores });
 
+    props.navigation.navigate("ResultsPage", { scores });
     await addPatientAssessment(
       userId,
       patientInfo,
-      "WFIRS",
+      "WSR",
       [
         calculateScore1(),
         calculateScore2(),
@@ -2536,7 +2534,7 @@ const WSRQuizScreen = (props) => {
             {page === 18 && (
               <TouchableOpacity
                 style={[styles.button, !canSubmit && styles.disabledButton]}
-                onPress={handleSubmit}
+                onPress={() => handleSubmit(patientInfo)}
                 disabled={!canSubmit}
               >
                 <Text style={styles.buttonText}>Submit</Text>
