@@ -59,8 +59,6 @@ const CompletedAssessments = (props) => {
 
   const formattedScores = (assessment) => {
     let scores = [];
-    console.log("ROST");
-    console.log(assessment.answers);
     if (assessment.assessmentType === "SNAPIV") {
       let score1 = 0;
       let score2 = 0;
